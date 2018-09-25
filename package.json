@@ -1,0 +1,34 @@
+{
+  "name": "react-native-siri-shortcuts",
+  "title": "React Native Siri Shortcuts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gustash/react-native-siri-shortcuts.git",
+    "baseUrl": "https://github.com/Gustash/react-native-siri-shortcuts"
+  },
+  "keywords": [
+    "react-native"
+  ],
+  "author": {
+    "name": "Gustavo Parreira",
+    "email": "yourname@email.com"
+  },
+  "license": "Apache-2.0",
+  "licenseFilename": "LICENSE",
+  "readmeFilename": "README.md",
+  "peerDependencies": {
+    "react": "16.2.0",
+    "react-native": "^0.52.0",
+    "react-native-swift": "^1.2.1"
+  },
+  "devDependencies": {
+    "react": "16.2.0",
+    "react-native": "^0.52.0"
+  }
+}
