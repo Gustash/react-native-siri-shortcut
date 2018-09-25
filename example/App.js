@@ -15,10 +15,7 @@ import {
   Button,
   NativeEventEmitter
 } from "react-native";
-import {
-  SiriShortcutsEvent,
-  createShortcut
-} from "react-native-siri-shortcuts";
+import { SiriShortcutsEvent, createShortcut } from "react-native-siri-shortcut";
 
 const opts = {
   activityType: "com.github.gustash.SiriShortcutsExample.sayHello",

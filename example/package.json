@@ -11,7 +11,7 @@
     "@babel/runtime": "^7.0.0",
     "react": "16.5.0",
     "react-native": "0.57.1",
-    "react-native-siri-shortcuts": "file:..",
+    "react-native-siri-shortcut": "file:..",
     "react-native-swift": "^1.2.1"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-# react-native-siri-shortcuts
+# react-native-siri-shortcut
 
 This module lets you use the new iOS 12 Siri Shortcuts inside your React Native app.
 
@@ -14,13 +14,13 @@ do a Pull Request detailing your changes and why.
 
 Install the module and react-native-swift (needed to support Swift code execution)
 
-`$ npm install react-native-siri-shortcuts react-native-swift --save`
+`$ npm install react-native-siri-shortcut react-native-swift --save`
 
 ### Mostly automatic installation
 
 Link the package:
 
-`$ react-native link react-native-siri-shortcuts && react-native link react-native-siri-shortcuts`
+`$ react-native link react-native-siri-shortcut && react-native link react-native-siri-shortcuts`
 
 Add these lines to your AppDelegate.m to get shortcut data from a cold-launch.
 
@@ -79,7 +79,7 @@ TODO: Detail manual installation process.
 import {
   SiriShortcutsEvent,
   createShortcut
-} from "react-native-siri-shortcuts";
+} from "react-native-siri-shortcut";
 
 const opts = {
   activityType: "your.bundle.identifier.YourActionType", // This activity type needs to be set in `NSUserActivityTypes` on the Info.plist
