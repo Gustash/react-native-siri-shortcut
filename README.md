@@ -206,7 +206,7 @@ SiriShortcutsEvent.addListener(
 ### Create shortcut
 
 ```javascript
-createShortcut((options: ShortcutOptions));
+createShortcut(options: ShortcutOptions);
 ```
 
 ### Clear all shortcuts
@@ -237,7 +237,7 @@ try {
 ```javascript
 /* ES5 */
 
-clearShortcutsWithIdentifiers((identifierArray: Array<string>))
+clearShortcutsWithIdentifiers(identifierArray: Array<string>)
   .then(() => {
     // Successfully cleared
   })
@@ -248,7 +248,7 @@ clearShortcutsWithIdentifiers((identifierArray: Array<string>))
 /* ES6 */
 
 try {
-  await clearShortcutsWithIdentifiers((identifierArray: Array<string>));
+  await clearShortcutsWithIdentifiers(identifierArray: Array<string>);
   // Successfully cleared
 } catch (e) {
   // Can't clear on <iOS 12
