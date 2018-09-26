@@ -33,34 +33,32 @@ const opts = {
   needsSave: true
 };
 
-type Props = {
-  initialShortcutUserInfo: ?any,
-  launchedFromShortcut: boolean
-};
+type Props = {};
 type State = {
-  shortcutInfo: ?any
+  shortcutInfo: ?any,
+  shortcutActivityType: ?string
 };
 export default class App extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.handleSiriShortcut = this.handleSiriShortcut.bind(this);
-  }
-
   state = {
-    shortcutInfo: this.props.initialShortcutUserInfo
+    shortcutInfo: null,
+    shortcutActivityType: null
   };
 
   componentDidMount() {
     SiriShortcutsEvent.addListener(
       "SiriShortcutListener",
-      this.handleSiriShortcut
+      this.handleSiriShortcut.bind(this)
     );
   }
 
-  handleSiriShortcut({ userInfo }: any) {
+  componentDidUpdate() {
+    alert("I got a shortcut!");
+  }
+
+  handleSiriShortcut({ userInfo, activityType }: any) {
     this.setState({
-      shortcutInfo: userInfo
+      shortcutInfo: userInfo,
+      shortcutActivityType: activityType
     });
   }
 
@@ -69,17 +67,21 @@ export default class App extends Component<Props, State> {
   }
 
   render() {
-    const { shortcutInfo } = this.state;
+    const { shortcutInfo, shortcutActivityType } = this.state;
 
     return (
       <View style={styles.container}>
+        <Text>Shortcut Activity Type: {shortcutActivityType || "None"}</Text>
         <Text>
           Shortcut Info:{" "}
           {shortcutInfo
             ? JSON.stringify(shortcutInfo)
             : "No shortcut was opened."}
         </Text>
-        <Button title="Create Shortcut" onPress={() => this.setupShortcut()} />
+        <Button
+          title="Create Shortcut"
+          onPress={this.setupShortcut.bind(this)}
+        />
       </View>
     );
   }

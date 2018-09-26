@@ -49,17 +49,17 @@ Add these lines to your AppDelegate.m to get shortcut data from a cold-launch.
 continueUserActivity:(NSUserActivity *)userActivity
  restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> *restorableObjects))restorationHandler
 {
-  NSDictionary *userInfo = userActivity.userInfo;
+  UIViewController *viewController = [self.window rootViewController];
+  RCTRootView *rootView = (RCTRootView*) [viewController view];
 
-  RCTRootView *rootView = (RCTRootView*) [self.window rootViewController].view;
-  // If the initial properties say the app launched from a shortcut (see above), send the shortcut data to the appProperties, re-rendering the app.
-  // This only happens once and only if the app was laucnhed from a shortcut, so you won't have any unnecessary re-renders.
+  // If the initial properties say the app launched from a shortcut (see above), tell the library about it.
   if ([[rootView.appProperties objectForKey:@"launchedFromShortcut"] boolValue]) {
-    rootView.appProperties = @{ @"initialShortcutUserInfo":userInfo, @"launchedFromShortcut":@NO };
+    ShortcutsModule.initialUserActivity = userActivity;
+
+    rootView.appProperties = @{ @"launchedFromShortcut":@NO };
   }
 
-  // Post notification data to the Notification Center so the module can send it to a JS listener.
-  [[NSNotificationCenter defaultCenter] postNotificationName:@"InitialUserActivity" object:nil userInfo:userInfo];
+  [ShortcutsModule onShortcutReceivedWithUserActivity:userActivity];
 
   return YES;
 }
@@ -104,17 +104,19 @@ class App extends Component {
     componentDidMount() {
         SiriShortcutsEvent.addListener(
             "SiriShortcutListener",
-            ({ userInfo }) => {
-                // Do something with the userInfo
+            ({ userInfo, activityType }) => {
+                // Do something with the userInfo and/or activityType
             }
         );
     }
 
     render() {
-        // If the app was launched from a shortcut, this is where the info would be on launch.
-        const { initialShortcutUserInfo } = this.props;
-
-        return <Button title="Create Shortcut" onPress={() => createShortcut(opts)} />
+        return (
+          <Button
+            title="Create Shortcut"
+            onPress={() => createShortcut(opts)}
+          />
+        );
     }
 
     ...
@@ -162,15 +164,17 @@ type ShortcutOptions = {
 
 ```javascript
 SiriShortcutsEvent.addListener(
-    "SiriShortcutListener",
-    ({ userInfo }) => { // Do something with userInfo }
+  "SiriShortcutListener",
+  ({ userInfo, activityType }) => {
+    // Do something with userInfo and/or activityType
+  }
 );
 ```
 
 ### Create shortcut
 
-```
-createShortcut(options: ShortcutOptions);
+```javascript
+createShortcut((options: ShortcutOptions));
 ```
 
 ## Example project

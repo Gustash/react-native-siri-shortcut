@@ -12,10 +12,44 @@ import Intents
 
 @objc(ShortcutsModule)
 class ShortcutsModule: RCTEventEmitter {
+    var hasListeners: Bool = false
+    let rootViewController: UIViewController
+    @objc static var initialUserActivity: NSUserActivity?
+    
+    @objc static func onShortcutReceived(userActivity: NSUserActivity) {
+        let userInfo = userActivity.userInfo
+        let activityType = userActivity.activityType
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "InitialUserActivity"), object: nil, userInfo: [
+            "userInfo": userInfo as Any,
+            "activityType": activityType
+            ])
+    }
+    
     override init() {
+        self.rootViewController = UIApplication.shared.keyWindow!.rootViewController!
+        
         super.init()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(startedFromShortcut(notification:)), name: NSNotification.Name(rawValue: "InitialUserActivity"), object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(startedFromShortcut(notification:)),
+            name: NSNotification.Name(rawValue: "InitialUserActivity"),
+            object: nil
+        )
+    }
+    
+    override func startObserving() {
+        hasListeners = true
+        
+        if let userActivity = ShortcutsModule.initialUserActivity {
+            ShortcutsModule.onShortcutReceived(userActivity: userActivity)
+            ShortcutsModule.initialUserActivity = nil
+        }
+    }
+    
+    override func stopObserving() {
+        hasListeners = false
     }
     
     override static func requiresMainQueueSetup() -> Bool {
@@ -27,44 +61,44 @@ class ShortcutsModule: RCTEventEmitter {
     }
     
     @objc func startedFromShortcut(notification: NSNotification) {
-        sendEvent(withName: "SiriShortcutListener", body: [
-            "userInfo": notification.userInfo
-            ])
+        let userInfo = notification.userInfo?["userInfo"]
+        let activityType = notification.userInfo?["activityType"]
+        
+        if (hasListeners) {
+            sendEvent(withName: "SiriShortcutListener", body: [
+                "userInfo": userInfo,
+                "activityType": activityType
+                ])
+        }
     }
     
     @available(iOS 12.0, *)
     @objc func setupShortcut(_ jsonOptions: Dictionary<String, Any>) {
-        if var topController = UIApplication.shared.keyWindow?.rootViewController {
-            while let presentedViewController = topController.presentedViewController {
-                topController = presentedViewController
-            }
-            
-            let options = ShortcutOptions(jsonOptions)
-            print("Options: \(options)")
-            
-            let activity = NSUserActivity(activityType: options.activityType)
-            activity.title = options.title
-            activity.requiredUserInfoKeys = options.requiredUserInfoKeys
-            activity.userInfo = options.userInfo
-            activity.needsSave = options.needsSave
-            activity.keywords = Set(options.keywords ?? [])
-            if let identifier = options.persistentIdentifier {
-                activity.persistentIdentifier = NSUserActivityPersistentIdentifier(identifier)
-            }
-            activity.isEligibleForHandoff = options.isEligibleForHandoff
-            activity.isEligibleForSearch = options.isEligibleForSearch
-            activity.isEligibleForPublicIndexing = options.isEligibleForPublicIndexing
-            activity.expirationDate = options.expirationDate
-            if let urlString = options.webpageURL {
-                activity.webpageURL = URL(string: urlString)
-            }
-            activity.isEligibleForPrediction = options.isEligibleForPrediction
-            activity.suggestedInvocationPhrase = options.suggestedInvocationPhrase
-            
-            topController.userActivity = activity
-            activity.becomeCurrent()
-            print("Just created shortcut")
+        let options = ShortcutOptions(jsonOptions)
+        print("Options: \(options)")
+        
+        let activity = NSUserActivity(activityType: options.activityType)
+        activity.title = options.title
+        activity.requiredUserInfoKeys = options.requiredUserInfoKeys
+        activity.userInfo = options.userInfo
+        activity.needsSave = options.needsSave
+        activity.keywords = Set(options.keywords ?? [])
+        if let identifier = options.persistentIdentifier {
+            activity.persistentIdentifier = NSUserActivityPersistentIdentifier(identifier)
         }
+        activity.isEligibleForHandoff = options.isEligibleForHandoff
+        activity.isEligibleForSearch = options.isEligibleForSearch
+        activity.isEligibleForPublicIndexing = options.isEligibleForPublicIndexing
+        activity.expirationDate = options.expirationDate
+        if let urlString = options.webpageURL {
+            activity.webpageURL = URL(string: urlString)
+        }
+        activity.isEligibleForPrediction = options.isEligibleForPrediction
+        activity.suggestedInvocationPhrase = options.suggestedInvocationPhrase
+        
+        self.rootViewController.userActivity = activity
+        activity.becomeCurrent()
+        print("Just created shortcut")
     }
     
     // become current

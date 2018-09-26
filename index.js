@@ -4,4 +4,4 @@ const { RNSiriShortcuts } = NativeModules;
 
 export const SiriShortcutsEvent = new NativeEventEmitter(RNSiriShortcuts);
 
-export const createShortcut = opts => RNSiriShortcuts.setupShortcut;
+export const createShortcut = opts => RNSiriShortcuts.setupShortcut(opts);

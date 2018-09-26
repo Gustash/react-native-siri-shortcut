@@ -9,6 +9,7 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <RNSiriShortcuts/RNSiriShortcuts-Swift.h>
 
 @implementation AppDelegate
 
@@ -19,7 +20,7 @@
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   
   // Check if the app launched with any shortcuts
-  BOOL launchedFromShortcut = [launchOptions objectForKey:@"UIApplicationLaunchOptionsUserActivityDictionaryKey"] != nil;
+  BOOL launchedFromShortcut = [launchOptions objectForKey:UIApplicationLaunchOptionsUserActivityDictionaryKey] != nil;
   // Add a boolean to the initialProperties to let the app know you got the initial shortcut
   NSDictionary *initialProperties = @{ @"launchedFromShortcut":@(launchedFromShortcut) };
 
@@ -42,17 +43,17 @@
 continueUserActivity:(NSUserActivity *)userActivity
  restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> *restorableObjects))restorationHandler
 {
-  NSDictionary *userInfo = userActivity.userInfo;
+  UIViewController *viewController = [self.window rootViewController];
+  RCTRootView *rootView = (RCTRootView*) [viewController view];
   
-  RCTRootView *rootView = (RCTRootView*) [self.window rootViewController].view;
-  // If the initial properties say the app launched from a shortcut (see above), send the shortcut data to the appProperties, re-rendering the app.
-  // This only happens once and only if the app was laucnhed from a shortcut, so you won't have any unnecessary re-renders.
+  // If the initial properties say the app launched from a shortcut (see above), tell the library about it.
   if ([[rootView.appProperties objectForKey:@"launchedFromShortcut"] boolValue]) {
-    rootView.appProperties = @{ @"initialShortcutUserInfo":userInfo, @"launchedFromShortcut":@NO };
+    ShortcutsModule.initialUserActivity = userActivity;
+    
+    rootView.appProperties = @{ @"launchedFromShortcut":@NO };
   }
   
-  // Post notification data to the Notification Center so the module can send it to a JS listener.
-  [[NSNotificationCenter defaultCenter] postNotificationName:@"InitialUserActivity" object:nil userInfo:userInfo];
+  [ShortcutsModule onShortcutReceivedWithUserActivity:userActivity];
   
   return YES;
 }
