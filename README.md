@@ -2,6 +2,8 @@
 
 This module lets you use the new iOS 12 Siri Shortcuts inside your React Native app.
 
+You can also use this for <iOS 12 User Activities.
+
 ## Disclaimer
 
 This project is in it's very early stages. I am adding features and fixing things
@@ -81,7 +83,8 @@ TODO: Detail manual installation process.
 ```javascript
 import {
   SiriShortcutsEvent,
-  createShortcut
+  createShortcut,
+  clearAllShortcuts
 } from "react-native-siri-shortcut";
 
 const opts = {
@@ -118,6 +121,17 @@ class App extends Component {
           <Button
             title="Create Shortcut"
             onPress={() => createShortcut(opts)}
+          />
+          <Button
+            title="Clear All Shortcuts"
+            onPress={async () => {
+              try {
+                await clearAllShortcuts();
+                // Shortcuts were successfully cleared
+              } catch (e) {
+                // Can't clear shortcuts on <iOS 12 because they don't exist
+              }
+            }}
           />
         );
     }
@@ -178,6 +192,29 @@ SiriShortcutsEvent.addListener(
 
 ```javascript
 createShortcut((options: ShortcutOptions));
+```
+
+### Clear shortcuts
+
+```javascript
+/* ES5 */
+
+clearAllShortcuts()
+  .then(() => {
+    // Successfully cleared
+  })
+  .catch(e => {
+    // Can't clear on <iOS 12
+  });
+
+/* ES6 */
+
+try {
+  await clearAllShortcuts();
+  // Successfully cleared
+} catch (e) {
+  // Can't clear on <iOS 12
+}
 ```
 
 ## Example project
