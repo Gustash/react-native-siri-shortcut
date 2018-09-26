@@ -12,7 +12,7 @@
 
 @interface RCT_EXTERN_REMAP_MODULE(RNSiriShortcuts, ShortcutsModule, RCTEventEmitter)
 
-RCT_EXTERN_METHOD(sayHello: (RCTResponseSenderBlock) callback)
+RCT_EXTERN_METHOD(clearAllShortcuts:(RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(setupShortcut: (NSDictionary *) options)
 
 @end

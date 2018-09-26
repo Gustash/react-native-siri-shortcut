@@ -15,7 +15,11 @@ import {
   Button,
   NativeEventEmitter
 } from "react-native";
-import { SiriShortcutsEvent, createShortcut } from "react-native-siri-shortcut";
+import {
+  SiriShortcutsEvent,
+  createShortcut,
+  clearAllShortcuts
+} from "react-native-siri-shortcut";
 
 const opts = {
   activityType: "com.github.gustash.SiriShortcutsExample.sayHello",
@@ -66,6 +70,15 @@ export default class App extends Component<Props, State> {
     createShortcut(opts);
   }
 
+  async clearShortcuts() {
+    try {
+      await clearAllShortcuts();
+      alert("Deleted all the shortcuts");
+    } catch (e) {
+      alert("You're not running iOS 12!");
+    }
+  }
+
   render() {
     const { shortcutInfo, shortcutActivityType } = this.state;
 
@@ -81,6 +94,10 @@ export default class App extends Component<Props, State> {
         <Button
           title="Create Shortcut"
           onPress={this.setupShortcut.bind(this)}
+        />
+        <Button
+          title="Delete All Shortcuts"
+          onPress={this.clearShortcuts.bind(this)}
         />
       </View>
     );

@@ -72,7 +72,7 @@ class ShortcutsModule: RCTEventEmitter {
         }
     }
     
-    @available(iOS 12.0, *)
+    @available(iOS 9.0, *)
     @objc func setupShortcut(_ jsonOptions: Dictionary<String, Any>) {
         let options = ShortcutOptions(jsonOptions)
         print("Options: \(options)")
@@ -83,9 +83,6 @@ class ShortcutsModule: RCTEventEmitter {
         activity.userInfo = options.userInfo
         activity.needsSave = options.needsSave
         activity.keywords = Set(options.keywords ?? [])
-        if let identifier = options.persistentIdentifier {
-            activity.persistentIdentifier = NSUserActivityPersistentIdentifier(identifier)
-        }
         activity.isEligibleForHandoff = options.isEligibleForHandoff
         activity.isEligibleForSearch = options.isEligibleForSearch
         activity.isEligibleForPublicIndexing = options.isEligibleForPublicIndexing
@@ -93,12 +90,29 @@ class ShortcutsModule: RCTEventEmitter {
         if let urlString = options.webpageURL {
             activity.webpageURL = URL(string: urlString)
         }
-        activity.isEligibleForPrediction = options.isEligibleForPrediction
-        activity.suggestedInvocationPhrase = options.suggestedInvocationPhrase
+        
+        if #available(iOS 12.0, *) {
+            activity.isEligibleForPrediction = options.isEligibleForPrediction
+            activity.suggestedInvocationPhrase = options.suggestedInvocationPhrase
+            if let identifier = options.persistentIdentifier {
+                activity.persistentIdentifier = NSUserActivityPersistentIdentifier(identifier)
+            }
+        }
         
         self.rootViewController.userActivity = activity
         activity.becomeCurrent()
         print("Just created shortcut")
+    }
+    
+    @objc func clearAllShortcuts(_ resolve: @escaping RCTPromiseResolveBlock,
+                                 rejecter reject: RCTPromiseRejectBlock) -> Void {
+        if #available(iOS 12.0, *) {
+            NSUserActivity.deleteAllSavedUserActivities {
+                resolve(nil)
+            }
+        } else {
+            reject("below_ios_12", "Your device needs to be running iOS 12+ for this", nil)
+        }
     }
     
     // become current
