@@ -18,10 +18,11 @@ import {
 import {
   SiriShortcutsEvent,
   createShortcut,
-  clearAllShortcuts
+  clearAllShortcuts,
+  clearShortcutsWithIdentifiers
 } from "react-native-siri-shortcut";
 
-const opts = {
+const opts1 = {
   activityType: "com.github.gustash.SiriShortcutsExample.sayHello",
   title: "Say Hi",
   userInfo: {
@@ -35,6 +36,15 @@ const opts = {
   isEligibleForPrediction: true,
   suggestedInvocationPhrase: "Say something",
   needsSave: true
+};
+
+const opts2 = {
+  activityType: "com.github.gustash.SiriShortcutsExample.somethingElse",
+  title: "Something Else",
+  persistentIdentifier: "some.persistent.identifier",
+  isEligibleForSearch: true,
+  isEligibleForPrediction: true,
+  suggestedInvocationPhrase: "What's up?"
 };
 
 type Props = {};
@@ -66,8 +76,44 @@ export default class App extends Component<Props, State> {
     });
   }
 
-  setupShortcut() {
-    createShortcut(opts);
+  setupShortcut1() {
+    createShortcut(opts1);
+  }
+
+  setupShortcut2() {
+    createShortcut(opts2);
+  }
+
+  async clearShortcut1() {
+    try {
+      await clearShortcutsWithIdentifiers([
+        "com.github.gustash.SiriShortcutsExample.sayHello"
+      ]);
+      alert("Cleared Shortcut 1");
+    } catch (e) {
+      alert("You're not running iOS 12!");
+    }
+  }
+
+  async clearShortcut2() {
+    try {
+      await clearShortcutsWithIdentifiers(["some.persistent.identifier"]);
+      alert("Cleared Shortcut 2");
+    } catch (e) {
+      alert("You're not running iOS 12!");
+    }
+  }
+
+  async clearBothShortcuts() {
+    try {
+      await clearShortcutsWithIdentifiers([
+        "com.github.gustash.SiriShortcutsExample.sayHello",
+        "some.persistent.identifier"
+      ]);
+      alert("Cleared Both Shortcuts");
+    } catch (e) {
+      alert("You're not running iOS 12!");
+    }
   }
 
   async clearShortcuts() {
@@ -87,13 +133,27 @@ export default class App extends Component<Props, State> {
         <Text>Shortcut Activity Type: {shortcutActivityType || "None"}</Text>
         <Text>
           Shortcut Info:{" "}
-          {shortcutInfo
-            ? JSON.stringify(shortcutInfo)
-            : "No shortcut was opened."}
+          {shortcutInfo ? JSON.stringify(shortcutInfo) : "No shortcut data."}
         </Text>
         <Button
-          title="Create Shortcut"
-          onPress={this.setupShortcut.bind(this)}
+          title="Create Shortcut 1"
+          onPress={this.setupShortcut1.bind(this)}
+        />
+        <Button
+          title="Create Shortcut 2"
+          onPress={this.setupShortcut2.bind(this)}
+        />
+        <Button
+          title="Clear Shortcut 1"
+          onPress={this.clearShortcut1.bind(this)}
+        />
+        <Button
+          title="Clear Shortcut 2"
+          onPress={this.clearShortcut2.bind(this)}
+        />
+        <Button
+          title="Clear Both Shortcuts"
+          onPress={this.clearBothShortcuts.bind(this)}
         />
         <Button
           title="Delete All Shortcuts"

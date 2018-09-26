@@ -115,10 +115,23 @@ class ShortcutsModule: RCTEventEmitter {
         }
     }
     
+    @objc func clearShortcutsWithIdentifiers(_ persistentIdentifiers: Array<String>,
+                                             resolver resolve: @escaping RCTPromiseResolveBlock,
+                                             rejecter reject: RCTPromiseRejectBlock) -> Void {
+        if #available(iOS 12.0, *) {
+            let persistentIdentifierArr = persistentIdentifiers.map {
+                NSUserActivityPersistentIdentifier($0)
+            }
+            
+            NSUserActivity.deleteSavedUserActivities(withPersistentIdentifiers: persistentIdentifierArr,
+                                                     completionHandler: { resolve(nil) })
+        } else {
+            reject("below_ios_12", "Your device needs to be running iOS 12+ for this", nil)
+        }
+    }
+    
     // become current
     // resign current
     // invalidate
-    // delete all saved user activities
-    // delete saved user activities
     
 }
