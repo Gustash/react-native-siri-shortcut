@@ -84,7 +84,8 @@ TODO: Detail manual installation process.
 import {
   SiriShortcutsEvent,
   createShortcut,
-  clearAllShortcuts
+  clearAllShortcuts,
+  clearShortcutsWithIdentifiers
 } from "react-native-siri-shortcut";
 
 const opts = {
@@ -121,6 +122,20 @@ class App extends Component {
           <Button
             title="Create Shortcut"
             onPress={() => createShortcut(opts)}
+          />
+          <Button
+            title="Clear Shortcuts With Identifiers"
+            onPress={async () => {
+              try {
+                await clearShortcutsWithIdentifiers([
+                  "some.identifier",
+                  "another.identifier"
+                ]);
+                // Shortcuts cleared
+              } catch (e) {
+                // Can't clear shortcuts on <iOS 12 because they don't exist
+              }
+            }}
           />
           <Button
             title="Clear All Shortcuts"
@@ -194,7 +209,7 @@ SiriShortcutsEvent.addListener(
 createShortcut((options: ShortcutOptions));
 ```
 
-### Clear shortcuts
+### Clear all shortcuts
 
 ```javascript
 /* ES5 */
@@ -211,6 +226,29 @@ clearAllShortcuts()
 
 try {
   await clearAllShortcuts();
+  // Successfully cleared
+} catch (e) {
+  // Can't clear on <iOS 12
+}
+```
+
+### Clear shortcuts with identifiers
+
+```javascript
+/* ES5 */
+
+clearShortcutsWithIdentifiers((identifierArray: Array<string>))
+  .then(() => {
+    // Successfully cleared
+  })
+  .catch(e => {
+    // Can't clear on <iOS 12
+  });
+
+/* ES6 */
+
+try {
+  await clearShortcutsWithIdentifiers((identifierArray: Array<string>));
   // Successfully cleared
 } catch (e) {
   // Can't clear on <iOS 12
