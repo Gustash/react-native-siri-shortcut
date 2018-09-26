@@ -27,6 +27,9 @@ Add these lines to your AppDelegate.m to get shortcut data from a cold-launch.
 ```objectivec
 // AppDelegate.m
 
+// ... imports
+#import <RNSiriShortcuts/RNSiriShortcuts-Swift.h>
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   ...
