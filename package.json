@@ -2,22 +2,22 @@
   "name": "react-native-siri-shortcut",
   "title": "React Native Siri Shortcut",
   "version": "1.1.4",
-  "description": "",
+  "description": "A React Native library that enables you to use iOS 12+ Siri Shortcuts.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Gustash/react-native-siri-shortcuts.git",
-    "baseUrl": "https://github.com/Gustash/react-native-siri-shortcuts"
+    "url": "git+https://github.com/Gustash/react-native-siri-shortcut.git",
+    "baseUrl": "https://github.com/Gustash/react-native-siri-shortcut"
   },
   "keywords": [
     "react-native"
   ],
   "author": {
     "name": "Gustavo Parreira",
-    "email": "yourname@email.com"
+    "email": "gustavotcparreira@gmail.com"
   },
   "license": "Apache-2.0",
   "licenseFilename": "LICENSE",
