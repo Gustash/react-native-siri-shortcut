@@ -4,7 +4,7 @@ package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
 Pod::Spec.new do |s|
   s.name         = "RNSiriShortcuts"
-  s.summary      = "React Native Siri Shortcut"
+  s.summary      = "React Native package to integrate with iOS Siri Shotcuts."
   s.description  = <<-DESC
                   RNSiriShortcuts
                    DESC
