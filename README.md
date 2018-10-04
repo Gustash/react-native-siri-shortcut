@@ -22,7 +22,7 @@ Install the module and react-native-swift (needed to support Swift code executio
 
 Link the package:
 
-`$ react-native link react-native-siri-shortcut && react-native link react-native-siri-shortcuts`
+`$ react-native link react-native-siri-shortcut && react-native link react-native-swift`
 
 Add these lines to your AppDelegate.m to get shortcut data from a cold-launch.
 
