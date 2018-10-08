@@ -1,10 +1,26 @@
 import { NativeModules, NativeEventEmitter } from "react-native";
+import { Platform } from "react-native";
 
-const { RNSiriShortcuts } = NativeModules;
+const RNSiriShortcuts = NativeModules.RNSiriShortcuts || {};
 
-export const SiriShortcutsEvent = new NativeEventEmitter(RNSiriShortcuts);
+const noop = () => ({});
+const safeCall = func =>
+  Platform.select({
+    android: noop,
+    ios: func
+  });
 
-export const createShortcut = opts => RNSiriShortcuts.setupShortcut(opts);
-export const clearAllShortcuts = RNSiriShortcuts.clearAllShortcuts;
-export const clearShortcutsWithIdentifiers =
-  RNSiriShortcuts.clearShortcutsWithIdentifiers;
+export const SiriShortcutsEvent = Platform.select({
+  ios: new NativeEventEmitter(RNSiriShortcuts),
+  android: {
+    addListener: () => {}
+  }
+});
+
+export const createShortcut = safeCall(opts =>
+  RNSiriShortcuts.setupShortcut(opts)
+);
+export const clearAllShortcuts = safeCall(RNSiriShortcuts.clearAllShortcuts);
+export const clearShortcutsWithIdentifiers = safeCall(
+  RNSiriShortcuts.clearShortcutsWithIdentifiers
+);

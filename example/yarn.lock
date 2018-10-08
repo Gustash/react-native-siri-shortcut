@@ -4131,7 +4131,7 @@ react-is@^16.5.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.5.2.tgz#e2a7b7c3f5d48062eb769fcb123505eb928722e3"
 
 "react-native-siri-shortcut@file:..":
-  version "1.1.2"
+  version "1.1.5"
 
 react-native-swift@^1.2.1:
   version "1.2.1"
@@ -5218,7 +5218,7 @@ xcode@^0.9.1:
     simple-plist "^0.2.1"
     uuid "3.0.1"
 
-"xcode@github:rhdeck/cordova-node-xcode":
+xcode@rhdeck/cordova-node-xcode:
   version "2.1.2"
   resolved "https://codeload.github.com/rhdeck/cordova-node-xcode/tar.gz/f9b3f947b6f0e8d4610bdcc5711477f80f664479"
   dependencies:
