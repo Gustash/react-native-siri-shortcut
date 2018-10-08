@@ -10,7 +10,9 @@ This project is in it's very early stages. I am adding features and fixing thing
 as I have time to work on them. If you have anything you want added, feel free to
 do a Pull Request detailing your changes and why.
 
-### This project only runs on iOS! It will crash on Android if you don't safe guard. I will add this to the library itself very soon.
+### Android
+
+This package is safe-guarded for Android, so you can freely call these functions and they won't crash your Android app. But be careful because the calls don't throw any errors, so don't always assume your action was actually successful if it doesn't error out. Always check if, in case of success, the platform is iOS.
 
 ## Getting started
 
