@@ -85,7 +85,8 @@ TODO: Detail manual installation process.
 ```javascript
 import {
   SiriShortcutsEvent,
-  createShortcut,
+  donateShortcut,
+  suggestShortcuts,
   clearAllShortcuts,
   clearShortcutsWithIdentifiers
 } from "react-native-siri-shortcut";
@@ -117,13 +118,15 @@ class App extends Component {
                 // Do something with the userInfo and/or activityType
             }
         );
+
+        suggestShortcuts([opts]);
     }
 
     render() {
         return (
           <Button
-            title="Create Shortcut"
-            onPress={() => createShortcut(opts)}
+            title="Donate Shortcut"
+            onPress={() => donateShortcut(opts)}
           />
           <Button
             title="Clear Shortcuts With Identifiers"
