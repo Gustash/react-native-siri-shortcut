@@ -205,10 +205,20 @@ SiriShortcutsEvent.addListener(
 );
 ```
 
-### Create shortcut
+### Donate shortcut
+
+#### Previously `createShortcut` which is now deprecated, use this instead.
 
 ```javascript
-createShortcut(options: ShortcutOptions);
+donateShortcut(options: ShortcutOptions);
+```
+
+### Suggest shortcuts
+
+#### Use this if you want to add the shortcut to Settings, but you don't want it to be suggested to the user.
+
+```javascript
+suggestShortcuts(shortcuts: Array<ShortcutOptions>);
 ```
 
 ### Clear all shortcuts
