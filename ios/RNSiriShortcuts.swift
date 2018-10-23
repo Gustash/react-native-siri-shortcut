@@ -73,9 +73,8 @@ class ShortcutsModule: RCTEventEmitter {
     }
     
     @available(iOS 9.0, *)
-    @objc func setupShortcut(_ jsonOptions: Dictionary<String, Any>) {
+    @objc func donateShortcut(_ jsonOptions: Dictionary<String, Any>) {
         let options = ShortcutOptions(jsonOptions)
-        print("Options: \(options)")
         
         let activity = NSUserActivity(activityType: options.activityType)
         activity.title = options.title
@@ -102,6 +101,41 @@ class ShortcutsModule: RCTEventEmitter {
         self.rootViewController.userActivity = activity
         activity.becomeCurrent()
         print("Just created shortcut")
+    }
+    
+    @available(iOS 12.0, *)
+    @objc func suggestShortcuts(_ jsonArray: Array<Dictionary<String, Any>>) {
+        var suggestions = [] as [INShortcut]
+        
+        for jsonOption in jsonArray {
+            let option = ShortcutOptions(jsonOption)
+            
+            let activity = NSUserActivity(activityType: option.activityType)
+            activity.title = option.title
+            activity.requiredUserInfoKeys = option.requiredUserInfoKeys
+            activity.userInfo = option.userInfo
+            activity.needsSave = option.needsSave
+            activity.keywords = Set(option.keywords ?? [])
+            activity.isEligibleForHandoff = option.isEligibleForHandoff
+            activity.isEligibleForSearch = option.isEligibleForSearch
+            activity.isEligibleForPublicIndexing = option.isEligibleForPublicIndexing
+            activity.expirationDate = option.expirationDate
+            if let urlString = option.webpageURL {
+                activity.webpageURL = URL(string: urlString)
+            }
+            
+            activity.isEligibleForPrediction = option.isEligibleForPrediction
+            activity.suggestedInvocationPhrase = option.suggestedInvocationPhrase
+            if let identifier = option.persistentIdentifier {
+                activity.persistentIdentifier = NSUserActivityPersistentIdentifier(identifier)
+            }
+            
+            suggestions.append(INShortcut(userActivity: activity))
+        }
+        
+        // Suggest the shortcuts.
+        INVoiceShortcutCenter.shared.setShortcutSuggestions(suggestions)
+        print("Created suggested shortcuts")
     }
     
     @objc func clearAllShortcuts(_ resolve: @escaping RCTPromiseResolveBlock,

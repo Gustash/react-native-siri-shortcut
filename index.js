@@ -1,5 +1,4 @@
-import { NativeModules, NativeEventEmitter } from "react-native";
-import { Platform } from "react-native";
+import { NativeModules, NativeEventEmitter, Platform } from "react-native";
 
 const RNSiriShortcuts = NativeModules.RNSiriShortcuts || {};
 
@@ -17,10 +16,23 @@ export const SiriShortcutsEvent = Platform.select({
   }
 });
 
+// depreceated, please use donateShortcut
 export const createShortcut = safeCall(opts =>
-  RNSiriShortcuts.setupShortcut(opts)
+  donateShortcut(opts)
 );
-export const clearAllShortcuts = safeCall(RNSiriShortcuts.clearAllShortcuts);
+
+export const donateShortcut = safeCall(opts =>
+  RNSiriShortcuts.donateShortcut(opts)
+);
+
+export const suggestShortcuts = safeCall(opts =>
+  RNSiriShortcuts.suggestShortcuts(opts)
+);
+
+export const clearAllShortcuts = safeCall(
+  RNSiriShortcuts.clearAllShortcuts
+);
+
 export const clearShortcutsWithIdentifiers = safeCall(
   RNSiriShortcuts.clearShortcutsWithIdentifiers
 );
