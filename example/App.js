@@ -17,7 +17,8 @@ import {
 } from "react-native";
 import {
   SiriShortcutsEvent,
-  createShortcut,
+  donateShortcut,
+  suggestShortcuts,
   clearAllShortcuts,
   clearShortcutsWithIdentifiers
 } from "react-native-siri-shortcut";
@@ -63,6 +64,15 @@ export default class App extends Component<Props, State> {
       "SiriShortcutListener",
       this.handleSiriShortcut.bind(this)
     );
+
+    // This will suggest these two shortcuts so that they appear
+    // in Settings > Siri & Search, even if they are not yet
+    // donated. Suitable for shortcuts that you expect the user 
+    // may want to use. (https://developer.apple.com/documentation/sirikit/shortcut_management/suggesting_shortcuts_to_users)
+    suggestShortcuts([
+      opts1,
+      opts2
+    ]);
   }
 
   componentDidUpdate() {
