@@ -4131,7 +4131,7 @@ react-is@^16.5.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.5.2.tgz#e2a7b7c3f5d48062eb769fcb123505eb928722e3"
 
 "react-native-siri-shortcut@file:..":
-  version "1.1.6"
+  version "1.2.1"
 
 react-native-swift@^1.2.1:
   version "1.2.1"

@@ -9,3 +9,4 @@
 #import <React/RCTUtils.h>
 #import <React/RCTEventEmitter.h>
 #import <React/RCTRootView.h>
+#import <React/RCTViewManager.h>
