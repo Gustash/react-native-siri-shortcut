@@ -1,7 +1,7 @@
 {
   "name": "react-native-siri-shortcut",
   "title": "React Native Siri Shortcut",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A React Native library that enables you to use iOS 12+ Siri Shortcuts.",
   "main": "index.js",
   "scripts": {
