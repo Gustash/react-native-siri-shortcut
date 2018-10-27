@@ -8,9 +8,11 @@
 
 #import "React/RCTViewManager.h"
 #import "React/RCTBridgeModule.h"
+#import "React/RCTEventEmitter.h"
 
 @interface RCT_EXTERN_MODULE(RNTAddToSiriButtonManager, RCTViewManager)
 
 RCT_EXPORT_VIEW_PROPERTY(buttonStyle, NSNumber)
+RCT_EXPORT_VIEW_PROPERTY(onPress, RCTBubblingEventBlock)
 
 @end

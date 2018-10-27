@@ -14,6 +14,7 @@
 		A0DF6826215A9B7700999009 /* RNSiriShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DF6825215A9B7700999009 /* RNSiriShortcuts.swift */; };
 		A0DF6828215A9C2500999009 /* RNSiriShortcuts.m in Sources */ = {isa = PBXBuildFile; fileRef = A0DF6827215A9C2500999009 /* RNSiriShortcuts.m */; };
 		A0DF682A215A9C4E00999009 /* ShortcutOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DF6829215A9C4E00999009 /* ShortcutOptions.swift */; };
+		A0FDBEB32182050700C8AFCB /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0FDBEB22182050700C8AFCB /* IntentsUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,6 +39,7 @@
 		A0DF6825215A9B7700999009 /* RNSiriShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNSiriShortcuts.swift; sourceTree = "<group>"; };
 		A0DF6827215A9C2500999009 /* RNSiriShortcuts.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNSiriShortcuts.m; sourceTree = "<group>"; };
 		A0DF6829215A9C4E00999009 /* ShortcutOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutOptions.swift; sourceTree = "<group>"; };
+		A0FDBEB22182050700C8AFCB /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0FDBEB32182050700C8AFCB /* IntentsUI.framework in Frameworks */,
 				A0DF6819215A827800999009 /* Intents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -78,6 +81,7 @@
 		A0DF6817215A827800999009 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A0FDBEB22182050700C8AFCB /* IntentsUI.framework */,
 				A0DF6818215A827800999009 /* Intents.framework */,
 			);
 			name = Frameworks;

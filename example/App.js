@@ -55,7 +55,7 @@ type Props = {};
 type State = {
   shortcutInfo: ?any,
   shortcutActivityType: ?string,
-  addToSiriStyle: number
+  addToSiriStyle: 0 | 1 | 2 | 3
 };
 export default class App extends Component<Props, State> {
   state = {
@@ -85,11 +85,11 @@ export default class App extends Component<Props, State> {
   }
 
   setupShortcut1() {
-    createShortcut(opts1);
+    donateShortcut(opts1);
   }
 
   setupShortcut2() {
-    createShortcut(opts2);
+    donateShortcut(opts2);
   }
 
   async clearShortcut1() {
@@ -180,7 +180,12 @@ export default class App extends Component<Props, State> {
           title="Delete All Shortcuts"
           onPress={this.clearShortcuts.bind(this)}
         />
-        <AddToSiriButton buttonStyle={addToSiriStyle} />
+        <AddToSiriButton
+          buttonStyle={addToSiriStyle}
+          onPress={() => {
+            console.log("You clicked me");
+          }}
+        />
         <Button
           title="Swap Siri Button Theme"
           onPress={this.swapSiriButtonTheme.bind(this)}
