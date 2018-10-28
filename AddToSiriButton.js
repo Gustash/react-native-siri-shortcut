@@ -1,4 +1,5 @@
 // @flow
+import type { ShortcutOptions } from ".";
 
 import * as React from "react";
 import { requireNativeComponent, View, StyleSheet } from "react-native";
@@ -18,13 +19,15 @@ type ViewStyleProp = $PropertyType<ViewProps, "style">;
 type Props = {
   buttonStyle?: 0 | 1 | 2 | 3,
   style?: ViewStyleProp,
+  shortcut: ShortcutOptions,
   onPress?: () => void
 };
 
 const AddToSiriButton = ({
   buttonStyle = SiriButtonStyles.white,
   style = {},
-  onPress = () => {}
+  onPress = () => {},
+  shortcut
 }: Props) => (
   <View
     style={[
@@ -39,6 +42,7 @@ const AddToSiriButton = ({
       buttonStyle={buttonStyle}
       style={{ flex: 1 }}
       onPress={onPress}
+      shortcut={shortcut}
     />
   </View>
 );
