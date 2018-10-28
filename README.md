@@ -221,6 +221,7 @@ SiriShortcutsEvent.addListener(
 ### Donate shortcut
 
 #### Previously `createShortcut` which is now deprecated, use this instead.
+Donate shortcut for an activity each time the user does it. For example, each time the user orders soup you may want to donate an activity that is relevant to ordering soup. Siri will use this information to then potentially recommend this activity to the user in their spotlight etc. These recommendations are based on factors such as time and location. *Do not* donate an activity if the user hasn't done it.
 
 ```javascript
 donateShortcut(options: ShortcutOptions);
@@ -228,7 +229,7 @@ donateShortcut(options: ShortcutOptions);
 
 ### Suggest shortcuts
 
-#### Use this if you want to add the shortcut to Settings, but you don't want it to be suggested to the user.
+Suggest shortcut for an activity if you would like an activity to appear in Siri Shortcuts without the user having to do it and thus before you'd donate it. This is geared towards more general actions that you believe users may want to use in Shortcuts even if they haven't made use of it in your app.
 
 ```javascript
 suggestShortcuts(shortcuts: Array<ShortcutOptions>);
