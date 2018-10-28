@@ -85,10 +85,14 @@ TODO: Detail manual installation process.
 ```javascript
 import {
   SiriShortcutsEvent,
-  createShortcut,
+  donateShortcut,
+  suggestShortcuts,
   clearAllShortcuts,
   clearShortcutsWithIdentifiers
 } from "react-native-siri-shortcut";
+import AddToSiriButton, {
+  SiriButtonStyles
+} from "react-native-siri-shortcut/AddToSiriButton";
 
 const opts = {
   activityType: "your.bundle.identifier.YourActionType", // This activity type needs to be set in `NSUserActivityTypes` on the Info.plist
@@ -117,13 +121,15 @@ class App extends Component {
                 // Do something with the userInfo and/or activityType
             }
         );
+
+        suggestShortcuts([opts]);
     }
 
     render() {
         return (
           <Button
-            title="Create Shortcut"
-            onPress={() => createShortcut(opts)}
+            title="Donate Shortcut"
+            onPress={() => donateShortcut(opts)}
           />
           <Button
             title="Clear Shortcuts With Identifiers"
@@ -150,6 +156,13 @@ class App extends Component {
               }
             }}
           />
+          <AddToSiriButton
+            style={{ flex: 1 }}
+            buttonStyle={SiriButtonStyles.whiteOutline}
+            onPress={() => {
+              console.log("You clicked me");
+            }}
+        />
         );
     }
 
@@ -205,10 +218,20 @@ SiriShortcutsEvent.addListener(
 );
 ```
 
-### Create shortcut
+### Donate shortcut
+
+#### Previously `createShortcut` which is now deprecated, use this instead.
 
 ```javascript
-createShortcut(options: ShortcutOptions);
+donateShortcut(options: ShortcutOptions);
+```
+
+### Suggest shortcuts
+
+#### Use this if you want to add the shortcut to Settings, but you don't want it to be suggested to the user.
+
+```javascript
+suggestShortcuts(shortcuts: Array<ShortcutOptions>);
 ```
 
 ### Clear all shortcuts
@@ -256,6 +279,30 @@ try {
   // Can't clear on <iOS 12
 }
 ```
+
+### Add to Siri button
+
+```javascript
+<AddToSiriButton
+  style={style: ViewStyleProps}
+  buttonStyle={SiriButtonStyles.white: 0 | 1 | 2 | 3} // Recommended you use the exported SiriButtonStyles object
+  onPress={() => { 
+    console.log('I was pressed!') 
+  }: () => void}
+/>
+```
+
+#### Black Theme
+![Black Theme](https://developer.apple.com/design/human-interface-guidelines/sirikit/images/AddToSiri-Black.png)
+
+#### Black Outline Theme
+![Black Outline Theme](https://developer.apple.com/design/human-interface-guidelines/sirikit/images/AddToSiri-Black-Outlined.png)
+
+#### White Theme
+![White Theme](https://developer.apple.com/design/human-interface-guidelines/sirikit/images/AddToSiri-White.png)
+
+#### White Outline Theme
+![White Outline Theme](https://developer.apple.com/design/human-interface-guidelines/sirikit/images/AddToSiri-White-Outlined.png)
 
 ## Example project
 

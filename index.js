@@ -16,10 +16,10 @@ export const SiriShortcutsEvent = Platform.select({
   }
 });
 
-// depreceated, please use donateShortcut
-export const createShortcut = safeCall(opts =>
-  donateShortcut(opts)
-);
+/**
+ * @deprecated Please use `donateShortcut` instead.
+ */
+export const createShortcut = opts => donateShortcut(opts);
 
 export const donateShortcut = safeCall(opts =>
   RNSiriShortcuts.donateShortcut(opts)
@@ -29,9 +29,7 @@ export const suggestShortcuts = safeCall(opts =>
   RNSiriShortcuts.suggestShortcuts(opts)
 );
 
-export const clearAllShortcuts = safeCall(
-  RNSiriShortcuts.clearAllShortcuts
-);
+export const clearAllShortcuts = safeCall(RNSiriShortcuts.clearAllShortcuts);
 
 export const clearShortcutsWithIdentifiers = safeCall(
   RNSiriShortcuts.clearShortcutsWithIdentifiers

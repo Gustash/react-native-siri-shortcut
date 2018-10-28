@@ -7,10 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A03074B921808BF3008B3572 /* SiriButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03074B621808BF3008B3572 /* SiriButtonView.swift */; };
+		A03074BA21808BF3008B3572 /* RNTAddToSiriButtonManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03074B721808BF3008B3572 /* RNTAddToSiriButtonManager.swift */; };
+		A03074BB21808BF3008B3572 /* RNTAddToSiriButtonManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A03074B821808BF3008B3572 /* RNTAddToSiriButtonManager.m */; };
 		A0DF6819215A827800999009 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0DF6818215A827800999009 /* Intents.framework */; };
 		A0DF6826215A9B7700999009 /* RNSiriShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DF6825215A9B7700999009 /* RNSiriShortcuts.swift */; };
 		A0DF6828215A9C2500999009 /* RNSiriShortcuts.m in Sources */ = {isa = PBXBuildFile; fileRef = A0DF6827215A9C2500999009 /* RNSiriShortcuts.m */; };
 		A0DF682A215A9C4E00999009 /* ShortcutOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DF6829215A9C4E00999009 /* ShortcutOptions.swift */; };
+		A0FDBEB32182050700C8AFCB /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0FDBEB22182050700C8AFCB /* IntentsUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,11 +31,15 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNSiriShortcuts.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNSiriShortcuts.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A03074B621808BF3008B3572 /* SiriButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SiriButtonView.swift; sourceTree = "<group>"; };
+		A03074B721808BF3008B3572 /* RNTAddToSiriButtonManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNTAddToSiriButtonManager.swift; sourceTree = "<group>"; };
+		A03074B821808BF3008B3572 /* RNTAddToSiriButtonManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNTAddToSiriButtonManager.m; sourceTree = "<group>"; };
 		A0DF6818215A827800999009 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		A0DF6824215A9B7600999009 /* RNSiriShortcuts-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNSiriShortcuts-Bridging-Header.h"; sourceTree = "<group>"; };
 		A0DF6825215A9B7700999009 /* RNSiriShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNSiriShortcuts.swift; sourceTree = "<group>"; };
 		A0DF6827215A9C2500999009 /* RNSiriShortcuts.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNSiriShortcuts.m; sourceTree = "<group>"; };
 		A0DF6829215A9C4E00999009 /* ShortcutOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutOptions.swift; sourceTree = "<group>"; };
+		A0FDBEB22182050700C8AFCB /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0FDBEB32182050700C8AFCB /* IntentsUI.framework in Frameworks */,
 				A0DF6819215A827800999009 /* Intents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -57,6 +66,9 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				A03074B821808BF3008B3572 /* RNTAddToSiriButtonManager.m */,
+				A03074B721808BF3008B3572 /* RNTAddToSiriButtonManager.swift */,
+				A03074B621808BF3008B3572 /* SiriButtonView.swift */,
 				A0DF6829215A9C4E00999009 /* ShortcutOptions.swift */,
 				A0DF6827215A9C2500999009 /* RNSiriShortcuts.m */,
 				A0DF6825215A9B7700999009 /* RNSiriShortcuts.swift */,
@@ -69,6 +81,7 @@
 		A0DF6817215A827800999009 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A0FDBEB22182050700C8AFCB /* IntentsUI.framework */,
 				A0DF6818215A827800999009 /* Intents.framework */,
 			);
 			name = Frameworks;
@@ -154,8 +167,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A03074BA21808BF3008B3572 /* RNTAddToSiriButtonManager.swift in Sources */,
 				A0DF682A215A9C4E00999009 /* ShortcutOptions.swift in Sources */,
+				A03074B921808BF3008B3572 /* SiriButtonView.swift in Sources */,
 				A0DF6828215A9C2500999009 /* RNSiriShortcuts.m in Sources */,
+				A03074BB21808BF3008B3572 /* RNTAddToSiriButtonManager.m in Sources */,
 				A0DF6826215A9B7700999009 /* RNSiriShortcuts.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

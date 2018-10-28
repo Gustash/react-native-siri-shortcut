@@ -22,6 +22,9 @@ import {
   clearAllShortcuts,
   clearShortcutsWithIdentifiers
 } from "react-native-siri-shortcut";
+import AddToSiriButton, {
+  SiriButtonStyles
+} from "react-native-siri-shortcut/AddToSiriButton";
 
 const opts1 = {
   activityType: "com.github.gustash.SiriShortcutsExample.sayHello",
@@ -51,12 +54,14 @@ const opts2 = {
 type Props = {};
 type State = {
   shortcutInfo: ?any,
-  shortcutActivityType: ?string
+  shortcutActivityType: ?string,
+  addToSiriStyle: 0 | 1 | 2 | 3
 };
 export default class App extends Component<Props, State> {
   state = {
     shortcutInfo: null,
-    shortcutActivityType: null
+    shortcutActivityType: null,
+    addToSiriStyle: SiriButtonStyles.blackOutline
   };
 
   componentDidMount() {
@@ -67,16 +72,9 @@ export default class App extends Component<Props, State> {
 
     // This will suggest these two shortcuts so that they appear
     // in Settings > Siri & Search, even if they are not yet
-    // donated. Suitable for shortcuts that you expect the user 
+    // donated. Suitable for shortcuts that you expect the user
     // may want to use. (https://developer.apple.com/documentation/sirikit/shortcut_management/suggesting_shortcuts_to_users)
-    suggestShortcuts([
-      opts1,
-      opts2
-    ]);
-  }
-
-  componentDidUpdate() {
-    alert("I got a shortcut!");
+    suggestShortcuts([opts1, opts2]);
   }
 
   handleSiriShortcut({ userInfo, activityType }: any) {
@@ -87,11 +85,11 @@ export default class App extends Component<Props, State> {
   }
 
   setupShortcut1() {
-    createShortcut(opts1);
+    donateShortcut(opts1);
   }
 
   setupShortcut2() {
-    createShortcut(opts2);
+    donateShortcut(opts2);
   }
 
   async clearShortcut1() {
@@ -135,8 +133,21 @@ export default class App extends Component<Props, State> {
     }
   }
 
+  swapSiriButtonTheme() {
+    const { addToSiriStyle } = this.state;
+
+    const styles = Object.keys(SiriButtonStyles).map(
+      key => SiriButtonStyles[key]
+    );
+    const index = styles.findIndex(style => style === addToSiriStyle);
+    if (index === styles.length - 1)
+      this.setState({ addToSiriStyle: styles[0] });
+    else this.setState({ addToSiriStyle: styles[index + 1] });
+  }
+
   render() {
-    const { shortcutInfo, shortcutActivityType } = this.state;
+    const { shortcutInfo, shortcutActivityType, addToSiriStyle } = this.state;
+    console.log(addToSiriStyle);
 
     return (
       <View style={styles.container}>
@@ -168,6 +179,16 @@ export default class App extends Component<Props, State> {
         <Button
           title="Delete All Shortcuts"
           onPress={this.clearShortcuts.bind(this)}
+        />
+        <AddToSiriButton
+          buttonStyle={addToSiriStyle}
+          onPress={() => {
+            console.log("You clicked me");
+          }}
+        />
+        <Button
+          title="Swap Siri Button Theme"
+          onPress={this.swapSiriButtonTheme.bind(this)}
         />
       </View>
     );
