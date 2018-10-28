@@ -11,12 +11,20 @@ import UIKit
 import Intents
 import IntentsUI
 
+enum VoiceShortcutMutationStatus: String {
+    case cancelled = "cancelled"
+    case added = "added"
+    case updated = "updated"
+    case deleted = "deleted"
+}
+
 @objc(ShortcutsModule)
 class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
     var hasListeners: Bool = false
     let rootViewController: UIViewController
     var presenterViewController: UIViewController?
     var voiceShortcuts: Array<NSObject> = [] // Actually it's INVoiceShortcut, but that way we would have to break compatibility with simple NSUserActivity behaviour
+    var presentShortcutCallback: RCTResponseSenderBlock?
     @objc static var initialUserActivity: NSUserActivity?
     
     @objc static func onShortcutReceived(userActivity: NSUserActivity) {
@@ -165,7 +173,8 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
     }
     
     @available(iOS 12.0, *)
-    @objc func presentShortcut(_ jsonOptions: Dictionary<String, Any>) {
+    @objc func presentShortcut(_ jsonOptions: Dictionary<String, Any>, callback: @escaping RCTResponseSenderBlock) {
+        presentShortcutCallback = callback
         let activity = ShortcutsModule.generateUserActivity(jsonOptions)
         
         let shortcut = INShortcut(userActivity: activity)
@@ -192,9 +201,13 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
         rootViewController.present(presenterViewController!, animated: true, completion: nil)
     }
     
-    func dismissPresenter() {
+    func dismissPresenter(_ status: VoiceShortcutMutationStatus) {
         presenterViewController?.dismiss(animated: true, completion: nil)
         presenterViewController = nil
+        presentShortcutCallback?([
+            ["status": status.rawValue]
+            ])
+        presentShortcutCallback = nil
     }
     
     @available(iOS 12.0, *)
@@ -203,13 +216,13 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
         if (voiceShortcut != nil) {
             voiceShortcuts.append(voiceShortcut!)
         }
-        dismissPresenter()
+        dismissPresenter(.added)
     }
     
     @available(iOS 12.0, *)
     func addVoiceShortcutViewControllerDidCancel(_ controller: INUIAddVoiceShortcutViewController) {
         // Adding shortcut cancelled
-        dismissPresenter()
+        dismissPresenter(.cancelled)
     }
     
     @available(iOS 12.0, *)
@@ -227,7 +240,7 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
             }
         }
         
-        dismissPresenter()
+        dismissPresenter(.updated)
     }
     
     @available(iOS 12.0, *)
@@ -243,13 +256,13 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
             voiceShortcuts.remove(at: indexOfDeletedShortcut!)
         }
         
-        dismissPresenter()
+        dismissPresenter(.deleted)
     }
     
     @available(iOS 12.0, *)
     func editVoiceShortcutViewControllerDidCancel(_ controller: INUIEditVoiceShortcutViewController) {
         // Shortcut edit was cancelled
-        dismissPresenter()
+        dismissPresenter(.cancelled)
     }
     
     // become current

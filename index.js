@@ -35,6 +35,10 @@ export type ShortcutOptions = {
   suggestedInvocationPhrase?: string
 };
 
+export type PresentShortcutCallbackData = {
+  status: "cancelled" | "added" | "deleted" | "updated"
+};
+
 const noop = () => ({});
 const safeCall = func =>
   Platform.select({
@@ -62,11 +66,16 @@ export const suggestShortcuts = safeCall((opts: Array<ShortcutOptions>) =>
   RNSiriShortcuts.suggestShortcuts(opts)
 );
 
-export const clearAllShortcuts = safeCall((opts: Array<ShortcutOptions>) =>
-  RNSiriShortcuts.clearAllShortcuts(opts)
+export const clearAllShortcuts = safeCall(() =>
+  RNSiriShortcuts.clearAllShortcuts()
 );
 
 export const clearShortcutsWithIdentifiers = safeCall(
   (identifiers: Array<string>) =>
     RNSiriShortcuts.clearShortcutsWithIdentifiers(identifiers)
+);
+
+export const presentShortcut = safeCall(
+  (opts: ShortcutOptions, callback: () => PresentShortcutCallbackData) =>
+    RNSiriShortcuts.presentShortcut(opts, callback)
 );

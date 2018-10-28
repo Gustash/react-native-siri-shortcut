@@ -187,7 +187,9 @@ export default class App extends Component<Props, State> {
         <AddToSiriButton
           buttonStyle={addToSiriStyle}
           onPress={() => {
-            RNSiriShortcuts.presentShortcut(opts1);
+            RNSiriShortcuts.presentShortcut(opts1, ({ status }) => {
+              console.log(`I was ${status}`);
+            });
           }}
           shortcut={opts1}
         />
