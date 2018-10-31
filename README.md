@@ -207,6 +207,14 @@ type ShortcutOptions = {
 };
 ```
 
+### Callback Type for the presentShortcut function
+
+```javascript
+type PresentShortcutCallbackData = {
+  status: "cancelled" | "added" | "deleted" | "updated"
+};
+```
+
 ### Shortcut listener
 
 ```javascript
@@ -290,6 +298,7 @@ try {
   onPress={() => { 
     console.log('I was pressed!') 
   }: () => void}
+  shortcut={options: ShortcutOptions}
 />
 ```
 
@@ -304,6 +313,16 @@ try {
 
 #### White Outline Theme
 ![White Outline Theme](https://developer.apple.com/design/human-interface-guidelines/sirikit/images/AddToSiri-White-Outlined.png)
+
+### Present shortcut
+
+This will open a screen prompting the user to create a custom phrase to add the shortcut provided to Siri. If the user has already added the shortcut before, the screen will give them the option to either update or delete the shortcut from their Siri.
+
+```javascript
+presentShortcut(options: ShortcutOptions, callback: () => PresentShortcutCallbackData)
+```
+
+![Example Screen](https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios12-iphone-x-third-party-app-add-to-siri.jpg)
 
 ## Example project
 

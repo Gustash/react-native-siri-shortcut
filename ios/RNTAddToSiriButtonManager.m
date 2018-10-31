@@ -14,5 +14,6 @@
 
 RCT_EXPORT_VIEW_PROPERTY(buttonStyle, NSNumber)
 RCT_EXPORT_VIEW_PROPERTY(onPress, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(shortcut, NSDictionary)
 
 @end

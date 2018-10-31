@@ -5,28 +5,23 @@
  * @format
  * @flow
  */
+import type { ShortcutOptions } from "react-native-siri-shortcut";
+
 import React, { Component } from "react";
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  NativeModules,
-  Button,
-  NativeEventEmitter
-} from "react-native";
+import { StyleSheet, Text, View, Button } from "react-native";
 import {
   SiriShortcutsEvent,
   donateShortcut,
   suggestShortcuts,
   clearAllShortcuts,
-  clearShortcutsWithIdentifiers
+  clearShortcutsWithIdentifiers,
+  presentShortcut
 } from "react-native-siri-shortcut";
 import AddToSiriButton, {
   SiriButtonStyles
 } from "react-native-siri-shortcut/AddToSiriButton";
 
-const opts1 = {
+const opts1: ShortcutOptions = {
   activityType: "com.github.gustash.SiriShortcutsExample.sayHello",
   title: "Say Hi",
   userInfo: {
@@ -42,7 +37,7 @@ const opts1 = {
   needsSave: true
 };
 
-const opts2 = {
+const opts2: ShortcutOptions = {
   activityType: "com.github.gustash.SiriShortcutsExample.somethingElse",
   title: "Something Else",
   persistentIdentifier: "some.persistent.identifier",
@@ -183,8 +178,11 @@ export default class App extends Component<Props, State> {
         <AddToSiriButton
           buttonStyle={addToSiriStyle}
           onPress={() => {
-            console.log("You clicked me");
+            presentShortcut(opts1, ({ status }) => {
+              console.log(`I was ${status}`);
+            });
           }}
+          shortcut={opts1}
         />
         <Button
           title="Swap Siri Button Theme"
