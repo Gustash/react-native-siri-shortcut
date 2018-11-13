@@ -322,6 +322,18 @@ This will open a screen prompting the user to create a custom phrase to add the 
 presentShortcut(options: ShortcutOptions, callback: () => PresentShortcutCallbackData)
 ```
 
+It's recommended to ensure the device used by the user is on iOS 12 or later. This can be checked using `Platform`.
+
+```javascript
+import { Platform } from 'react-native';
+
+const masterVersion = parseInt(Platform.Version, 10);
+
+if (masterVersion >= 12) {
+  // presentShortcut here
+}
+```
+
 ![Example Screen](https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios12-iphone-x-third-party-app-add-to-siri.jpg)
 
 ## Example project
