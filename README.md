@@ -295,12 +295,29 @@ try {
 <AddToSiriButton
   style={style: ViewStyleProps}
   buttonStyle={SiriButtonStyles.white: 0 | 1 | 2 | 3} // Recommended you use the exported SiriButtonStyles object
-  onPress={() => { 
-    console.log('I was pressed!') 
+  onPress={() => {
+    console.log('I was pressed!')
   }: () => void}
   shortcut={options: ShortcutOptions}
 />
 ```
+Preventing use on iOS < 12
+
+```javascript
+import AddToSiriButton, { AddSiriButtonAvailable } from "react-native-siri-shortcut/AddToSiriButton";
+
+render() {
+  ...
+  {AddSiriButtonAvailable() ? <AddToSiriButton ... />
+               : <Text onPress={() => {
+                 Alert.alert(
+                   "Sorry, only available for iOS 12 and later...");
+                 }}>Add to Siri</Text>
+  }
+}
+
+```
+
 
 #### Black Theme
 ![Black Theme](https://developer.apple.com/design/human-interface-guidelines/sirikit/images/AddToSiri-Black.png)

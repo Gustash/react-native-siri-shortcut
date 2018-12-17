@@ -3,8 +3,23 @@ import type { ShortcutOptions } from ".";
 
 import * as React from "react";
 import { requireNativeComponent, View, StyleSheet } from "react-native";
+import { Platform } from 'react-native';
 
-const RNTAddToSiriButton = requireNativeComponent("RNTAddToSiriButton");
+const masterVersion = parseInt(Platform.Version, 10);
+
+var RNTAddToSiriButton
+if (masterVersion >= 12) {
+  RNTAddToSiriButton = requireNativeComponent("RNTAddToSiriButton");
+} else {
+  RNTAddToSiriButton = () => {
+    throw new Error("AddToSiriButton not available on iOS < 12")
+    return null
+  }
+}
+
+export const AddSiriButtonAvailable = () => {
+  return masterVersion >= 12;
+}
 
 export const SiriButtonStyles = {
   white: 0,
