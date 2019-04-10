@@ -46,7 +46,7 @@ public class SiriButtonView : UIView {
     @objc(setButtonStyle:)
     public func setButtonStyle(_ buttonStyle: NSNumber) {
         let style = INUIAddVoiceShortcutButtonStyle.init(rawValue: buttonStyle.uintValue)
-        setupButton(style: style)
+        setupButton(style: style, shortcut: button.shortcut)
     }
     
     @objc(setOnPress:)
@@ -58,7 +58,7 @@ public class SiriButtonView : UIView {
     public func setShortcut(_ jsonOptions: Dictionary<String, Any>) {
         let activity = ShortcutsModule.generateUserActivity(jsonOptions)
         let shortcut = INShortcut(userActivity: activity)
-        setupButton(shortcut: shortcut)
+        setupButton(style: self.style, shortcut: shortcut)
     }
     
     required init?(coder aDecoder: NSCoder) {
