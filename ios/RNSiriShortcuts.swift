@@ -199,7 +199,7 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
             (presenterViewController as! INUIEditVoiceShortcutViewController).delegate = self
         }
         DispatchQueue.main.async {
-            UIApplication.shared.keyWindow!.rootViewController!.present(presenterViewController!, animated: true, completion: nil)
+            UIApplication.shared.keyWindow!.rootViewController!.present(self.presenterViewController!, animated: true, completion: nil)
         }
     }
     
