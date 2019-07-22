@@ -19,16 +19,17 @@
     "name": "Gustavo Parreira",
     "email": "gustavotcparreira@gmail.com"
   },
+  "homepage": "https://github.com/Gustash/react-native-siri-shortcut",
   "license": "Apache-2.0",
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
   "peerDependencies": {
-    "react": "16.2.0",
-    "react-native": "^0.52.0",
+    "react": "16.8.6",
+    "react-native": "^0.60.4",
     "react-native-swift": "^1.2.1"
   },
   "devDependencies": {
-    "react": "16.2.0",
-    "react-native": "^0.52.0"
+    "react": "16.8.6",
+    "react-native": "^0.60.4"
   }
 }

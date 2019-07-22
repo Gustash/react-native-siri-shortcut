@@ -3,23 +3,25 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start": "yarn react-native start",
     "test": "jest",
     "postinstall": "node ../scripts/examples_postinstall.js node_modules/react-native-siri-shortcut"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0",
-    "react": "16.5.0",
-    "react-native": "0.57.1",
+    "react": "16.8.6",
+    "react-native": "0.60.4",
     "react-native-siri-shortcut": "file:..",
     "react-native-swift": "^1.2.1"
   },
   "devDependencies": {
-    "babel-jest": "23.6.0",
-    "flow-bin": "^0.78.0",
-    "jest": "23.6.0",
-    "metro-react-native-babel-preset": "0.46.0",
-    "react-test-renderer": "16.5.0"
+    "@babel/core": "^7.5.0",
+    "@babel/runtime": "^7.5.0",
+    "@react-native-community/eslint-config": "^0.0.3",
+    "babel-jest": "^24.1.0",
+    "flow-bin": "^0.98.0",
+    "jest": "^24.1.0",
+    "metro-react-native-babel-preset": "^0.54.1",
+    "react-test-renderer": "16.8.6"
   },
   "jest": {
     "preset": "react-native"
