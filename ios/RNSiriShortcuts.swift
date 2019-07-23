@@ -21,7 +21,7 @@ enum VoiceShortcutMutationStatus: String {
 @objc(ShortcutsModule)
 class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
     var hasListeners: Bool = false
-    let rootViewController: UIViewController
+
     var presenterViewController: UIViewController?
     var voiceShortcuts: Array<NSObject> = [] // Actually it's INVoiceShortcut, but that way we would have to break compatibility with simple NSUserActivity behaviour
     var presentShortcutCallback: RCTResponseSenderBlock?
@@ -38,8 +38,7 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
     }
     
     override init() {
-        self.rootViewController = UIApplication.shared.keyWindow!.rootViewController!
-        
+      
         super.init()
         
         // Get all added voice shortcuts so we can make sure later if the presented shortcut is to be edited or added
@@ -128,8 +127,9 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
     @available(iOS 9.0, *)
     @objc func donateShortcut(_ jsonOptions: Dictionary<String, Any>) {
         let activity = ShortcutsModule.generateUserActivity(jsonOptions)
-        
-        self.rootViewController.userActivity = activity
+        DispatchQueue.main.async {
+            UIApplication.shared.keyWindow!.rootViewController!.userActivity = activity
+        }
         activity.becomeCurrent()
         print("Just created shortcut")
     }
@@ -198,7 +198,9 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
             presenterViewController!.modalPresentationStyle = .formSheet
             (presenterViewController as! INUIEditVoiceShortcutViewController).delegate = self
         }
-        rootViewController.present(presenterViewController!, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            UIApplication.shared.keyWindow!.rootViewController!.present(self.presenterViewController!, animated: true, completion: nil)
+        }
     }
     
     func dismissPresenter(_ status: VoiceShortcutMutationStatus) {
