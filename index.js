@@ -1,5 +1,3 @@
-// @flow
-
 import { NativeModules, NativeEventEmitter, Platform } from "react-native";
 
 const RNSiriShortcuts = NativeModules.RNSiriShortcuts || {};
@@ -37,15 +35,26 @@ export type ShortcutOptions = {
 
 export type PresentShortcutCallbackData = {
   status: "cancelled" | "added" | "deleted" | "updated",
-  shortcut: string
+  phrase: ?string
+};
+
+export type ShortcutData = {
+  identifier: string,
+  phrase: string,
+  options?: ShortcutOptions
 };
 
 const noop = () => ({});
-const safeCall = func =>
-  Platform.select({
-    android: noop,
-    ios: func
-  });
+const safeCall = (func, minVersion = 12) => {
+  if (
+    Platform.OS !== "ios" ||
+    Number.parseFloat(Platform.Version, 10) < minVersion
+  ) {
+    return noop;
+  }
+
+  return func;
+};
 
 export const SiriShortcutsEvent = Platform.select({
   ios: new NativeEventEmitter(RNSiriShortcuts),
@@ -59,8 +68,9 @@ export const SiriShortcutsEvent = Platform.select({
  */
 export const createShortcut = (opts: ShortcutOptions) => donateShortcut(opts);
 
-export const donateShortcut = safeCall((opts: ShortcutOptions) =>
-  RNSiriShortcuts.donateShortcut(opts)
+export const donateShortcut = safeCall(
+  (opts: ShortcutOptions) => RNSiriShortcuts.donateShortcut(opts),
+  9
 );
 
 export const suggestShortcuts = safeCall((opts: Array<ShortcutOptions>) =>
@@ -76,11 +86,12 @@ export const clearShortcutsWithIdentifiers = safeCall(
     RNSiriShortcuts.clearShortcutsWithIdentifiers(identifiers)
 );
 
+export const supportsPresentShortcut =
+  Platform.OS === "ios" && Number.parseFloat(Platform.Version >= 12);
+
 export const presentShortcut = safeCall(
   (opts: ShortcutOptions, callback: () => PresentShortcutCallbackData) =>
     RNSiriShortcuts.presentShortcut(opts, callback)
 );
 
-export const getShortcuts = safeCall(() =>
-  RNSiriShortcuts.getShortcuts()
-);
+export const getShortcuts = safeCall(() => RNSiriShortcuts.getShortcuts());

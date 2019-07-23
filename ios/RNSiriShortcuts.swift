@@ -175,8 +175,12 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
     @available(iOS 12.0, *)
     @objc func getShortcuts(_ resolve: @escaping RCTPromiseResolveBlock,
                             rejecter reject: RCTPromiseRejectBlock) -> Void {
-        resolve((voiceShortcuts as! Array<INVoiceShortcut>).map({ (shortcut) -> String in
-            return shortcut.invocationPhrase
+        resolve((voiceShortcuts as! Array<INVoiceShortcut>).map({ (voiceShortcut) -> [String: Any?] in
+            return [
+                "identifier": voiceShortcut.identifier,
+                "phrase": voiceShortcut.invocationPhrase,
+                "options": voiceShortcut.shortcut.userActivity ?? nil
+            ]
         }))
     }
     
@@ -216,7 +220,7 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
         presenterViewController?.dismiss(animated: true, completion: nil)
         presenterViewController = nil
         presentShortcutCallback?([
-            ["status": status.rawValue, "shortcut": voiceShortcut?.invocationPhrase]
+            ["status": status.rawValue, "phrase": voiceShortcut?.invocationPhrase]
         ])
         presentShortcutCallback = nil
     }
@@ -258,16 +262,20 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
     func editVoiceShortcutViewController(_ controller: INUIEditVoiceShortcutViewController, didDeleteVoiceShortcutWithIdentifier deletedVoiceShortcutIdentifier: UUID) {
         // Shortcut was deleted
         
+        // Keep a reference so we can notify JS about what the invocationPhrase was for this shortcut
+        var deletedShortcut: INVoiceShortcut? = nil
+        
         // Remove the deleted shortcut from the array
         let indexOfDeletedShortcut = (voiceShortcuts as! Array<INVoiceShortcut>).firstIndex { (shortcut) -> Bool in
             return shortcut.identifier == deletedVoiceShortcutIdentifier
         }
         
         if (indexOfDeletedShortcut != nil) {
+            deletedShortcut = voiceShortcuts[indexOfDeletedShortcut!] as? INVoiceShortcut
             voiceShortcuts.remove(at: indexOfDeletedShortcut!)
         }
         
-        dismissPresenter(.deleted, withShortcut: nil)
+        dismissPresenter(.deleted, withShortcut: deletedShortcut)
     }
     
     @available(iOS 12.0, *)

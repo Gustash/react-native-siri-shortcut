@@ -34,8 +34,8 @@
 		A03483D122E6208C00472773 /* RNPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3683F609C5294F10ABF5A15F /* RNPlaceholder.swift */; };
 		A03483D222E6208C00472773 /* RNPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3683F609C5294F10ABF5A15F /* RNPlaceholder.swift */; };
 		A03483D322E6208C00472773 /* RNPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3683F609C5294F10ABF5A15F /* RNPlaceholder.swift */; };
+		A034844222E7435400472773 /* libRNSiriShortcuts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A05656BA22E61CEB005B5BC8 /* libRNSiriShortcuts.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		A05655A022E604C5005B5BC8 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A056557322E604C5005B5BC8 /* JavaScriptCore.framework */; };
-		A05656BB22E61CFD005B5BC8 /* libRNSiriShortcuts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A05656BA22E61CEB005B5BC8 /* libRNSiriShortcuts.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -372,9 +372,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A034844222E7435400472773 /* libRNSiriShortcuts.a in Frameworks */,
 				A05655A022E604C5005B5BC8 /* JavaScriptCore.framework in Frameworks */,
 				1133FEEE54FCA1AB62AF495A /* libPods-example.a in Frameworks */,
-				A05656BB22E61CFD005B5BC8 /* libRNSiriShortcuts.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

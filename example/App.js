@@ -5,17 +5,25 @@
  * @format
  * @flow
  */
-import type { ShortcutOptions } from "react-native-siri-shortcut";
+import type { ShortcutOptions, ShortcutData } from "react-native-siri-shortcut";
 
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  ScrollView,
+  Button,
+  SafeAreaView,
+  View
+} from "react-native";
 import {
   SiriShortcutsEvent,
   donateShortcut,
   suggestShortcuts,
   clearAllShortcuts,
   clearShortcutsWithIdentifiers,
-  presentShortcut
+  presentShortcut,
+  getShortcuts
 } from "react-native-siri-shortcut";
 import AddToSiriButton, {
   SiriButtonStyles,
@@ -46,18 +54,18 @@ const opts2: ShortcutOptions = {
   isEligibleForPrediction: true,
   suggestedInvocationPhrase: "What's up?"
 };
-
-type Props = {};
 type State = {
   shortcutInfo: ?any,
   shortcutActivityType: ?string,
-  addToSiriStyle: 0 | 1 | 2 | 3
+  addToSiriStyle: 0 | 1 | 2 | 3,
+  shortcuts: Array<ShortcutData>
 };
-export default class App extends Component<Props, State> {
-  state = {
+export default class App extends Component<void, State> {
+  state: State = {
     shortcutInfo: null,
     shortcutActivityType: null,
-    addToSiriStyle: SiriButtonStyles.blackOutline
+    addToSiriStyle: SiriButtonStyles.blackOutline,
+    shortcuts: []
   };
 
   componentDidMount() {
@@ -71,6 +79,8 @@ export default class App extends Component<Props, State> {
     // donated. Suitable for shortcuts that you expect the user
     // may want to use. (https://developer.apple.com/documentation/sirikit/shortcut_management/suggesting_shortcuts_to_users)
     suggestShortcuts([opts1, opts2]);
+
+    this.updateShortcutList();
   }
 
   handleSiriShortcut({ userInfo, activityType }: any) {
@@ -103,6 +113,18 @@ export default class App extends Component<Props, State> {
     try {
       await clearShortcutsWithIdentifiers(["some.persistent.identifier"]);
       alert("Cleared Shortcut 2");
+    } catch (e) {
+      alert("You're not running iOS 12!");
+    }
+  }
+
+  async updateShortcutList() {
+    try {
+      const shortcuts = await getShortcuts();
+
+      this.setState({
+        shortcuts
+      });
     } catch (e) {
       alert("You're not running iOS 12!");
     }
@@ -142,56 +164,83 @@ export default class App extends Component<Props, State> {
   }
 
   render() {
-    const { shortcutInfo, shortcutActivityType, addToSiriStyle } = this.state;
-    console.log(addToSiriStyle);
+    const {
+      shortcutInfo,
+      shortcutActivityType,
+      addToSiriStyle,
+      shortcuts
+    } = this.state;
 
     return (
-      <View style={styles.container}>
-        <Text>Shortcut Activity Type: {shortcutActivityType || "None"}</Text>
-        <Text>
-          Shortcut Info:{" "}
-          {shortcutInfo ? JSON.stringify(shortcutInfo) : "No shortcut data."}
-        </Text>
-        <Button
-          title="Create Shortcut 1"
-          onPress={this.setupShortcut1.bind(this)}
-        />
-        <Button
-          title="Create Shortcut 2"
-          onPress={this.setupShortcut2.bind(this)}
-        />
-        <Button
-          title="Clear Shortcut 1"
-          onPress={this.clearShortcut1.bind(this)}
-        />
-        <Button
-          title="Clear Shortcut 2"
-          onPress={this.clearShortcut2.bind(this)}
-        />
-        <Button
-          title="Clear Both Shortcuts"
-          onPress={this.clearBothShortcuts.bind(this)}
-        />
-        <Button
-          title="Delete All Shortcuts"
-          onPress={this.clearShortcuts.bind(this)}
-        />
-        {supportsSiriButton && (
-          <AddToSiriButton
-            buttonStyle={addToSiriStyle}
-            onPress={() => {
-              presentShortcut(opts1, ({ status }) => {
-                console.log(`I was ${status}`);
-              });
-            }}
-            shortcut={opts1}
+      <SafeAreaView style={styles.container}>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.contentContainer}
+        >
+          <Text>Shortcut Activity Type: {shortcutActivityType || "None"}</Text>
+          <Text>
+            Shortcut Info:{" "}
+            {shortcutInfo ? JSON.stringify(shortcutInfo) : "No shortcut data."}
+          </Text>
+          <Button
+            title="Create Shortcut 1"
+            onPress={this.setupShortcut1.bind(this)}
           />
-        )}
-        <Button
-          title="Swap Siri Button Theme"
-          onPress={this.swapSiriButtonTheme.bind(this)}
-        />
-      </View>
+          <Button
+            title="Create Shortcut 2"
+            onPress={this.setupShortcut2.bind(this)}
+          />
+          <Button
+            title="Clear Shortcut 1"
+            onPress={this.clearShortcut1.bind(this)}
+          />
+          <Button
+            title="Clear Shortcut 2"
+            onPress={this.clearShortcut2.bind(this)}
+          />
+          <Button
+            title="Clear Both Shortcuts"
+            onPress={this.clearBothShortcuts.bind(this)}
+          />
+          <Button
+            title="Delete All Shortcuts"
+            onPress={this.clearShortcuts.bind(this)}
+          />
+          <Button
+            title="Update list of shortcuts"
+            onPress={this.updateShortcutList.bind(this)}
+          />
+          {supportsSiriButton && (
+            <>
+              <AddToSiriButton
+                buttonStyle={addToSiriStyle}
+                onPress={() => {
+                  presentShortcut(opts1, ({ status }) => {
+                    console.log(`I was ${status}`);
+                  });
+                }}
+                shortcut={opts1}
+              />
+              <Button
+                title="Swap Siri Button Theme"
+                onPress={this.swapSiriButtonTheme.bind(this)}
+              />
+            </>
+          )}
+          {shortcuts.length ? (
+            shortcuts.map(({ identifier, phrase, options }, i) => (
+              <View key={identifier}>
+                <Text>Shortcut {i + 1}:</Text>
+                <Text>Identifier - {identifier}</Text>
+                <Text>Phrase - {phrase}</Text>
+                <Text>Options - {JSON.stringify(options)}</Text>
+              </View>
+            ))
+          ) : (
+            <Text>No Shortcuts yet</Text>
+          )}
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 }
@@ -199,18 +248,10 @@ export default class App extends Component<Props, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "#F5FCFF"
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10
-  },
-  instructions: {
-    textAlign: "center",
-    color: "#333333",
-    marginBottom: 5
+  contentContainer: {
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
