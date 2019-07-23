@@ -18,7 +18,8 @@ import {
   presentShortcut
 } from "react-native-siri-shortcut";
 import AddToSiriButton, {
-  SiriButtonStyles
+  SiriButtonStyles,
+  supportsSiriButton
 } from "react-native-siri-shortcut/AddToSiriButton";
 
 const opts1: ShortcutOptions = {
@@ -175,15 +176,17 @@ export default class App extends Component<Props, State> {
           title="Delete All Shortcuts"
           onPress={this.clearShortcuts.bind(this)}
         />
-        <AddToSiriButton
-          buttonStyle={addToSiriStyle}
-          onPress={() => {
-            presentShortcut(opts1, ({ status }) => {
-              console.log(`I was ${status}`);
-            });
-          }}
-          shortcut={opts1}
-        />
+        {supportsSiriButton && (
+          <AddToSiriButton
+            buttonStyle={addToSiriStyle}
+            onPress={() => {
+              presentShortcut(opts1, ({ status }) => {
+                console.log(`I was ${status}`);
+              });
+            }}
+            shortcut={opts1}
+          />
+        )}
         <Button
           title="Swap Siri Button Theme"
           onPress={this.swapSiriButtonTheme.bind(this)}

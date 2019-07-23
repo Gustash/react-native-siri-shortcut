@@ -2,7 +2,12 @@
 import type { ShortcutOptions } from ".";
 
 import * as React from "react";
-import { requireNativeComponent, View, StyleSheet } from "react-native";
+import {
+  requireNativeComponent,
+  View,
+  StyleSheet,
+  Platform
+} from "react-native";
 
 const RNTAddToSiriButton = requireNativeComponent("RNTAddToSiriButton");
 
@@ -22,6 +27,9 @@ type Props = {
   shortcut: ShortcutOptions,
   onPress?: () => void
 };
+
+export const supportsSiriButton =
+  Platform.OS === "ios" && Number.parseFloat(Platform.Version, 10) >= 12;
 
 const AddToSiriButton = ({
   buttonStyle = SiriButtonStyles.white,

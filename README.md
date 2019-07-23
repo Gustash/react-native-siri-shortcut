@@ -302,6 +302,14 @@ try {
 />
 ```
 
+#### Check if the button is available
+
+```javascript
+import { supportsSiriButton } from 'react-native-siri-shortcut/AddToSiriButton';
+
+{supportsSiriButton && <AddToSiriButton {...props} />}
+```
+
 #### Black Theme
 ![Black Theme](https://developer.apple.com/design/human-interface-guidelines/sirikit/images/AddToSiri-Black.png)
 
