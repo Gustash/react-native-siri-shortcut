@@ -11,6 +11,7 @@ import UIKit
 import Intents
 import IntentsUI
 
+
 enum VoiceShortcutMutationStatus: String {
     case cancelled = "cancelled"
     case added = "added"
@@ -21,7 +22,7 @@ enum VoiceShortcutMutationStatus: String {
 @objc(ShortcutsModule)
 class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
     var hasListeners: Bool = false
-
+    
     var presenterViewController: UIViewController?
     var voiceShortcuts: Array<NSObject> = [] // Actually it's INVoiceShortcut, but that way we would have to break compatibility with simple NSUserActivity behaviour
     var presentShortcutCallback: RCTResponseSenderBlock?
@@ -38,7 +39,7 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
     }
     
     override init() {
-      
+        
         super.init()
         
         // Get all added voice shortcuts so we can make sure later if the presented shortcut is to be edited or added
@@ -176,10 +177,30 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
     @objc func getShortcuts(_ resolve: @escaping RCTPromiseResolveBlock,
                             rejecter reject: RCTPromiseRejectBlock) -> Void {
         resolve((voiceShortcuts as! Array<INVoiceShortcut>).map({ (voiceShortcut) -> [String: Any?] in
+            var options: [String: Any?]? = nil
+            if let userActivity = voiceShortcut.shortcut.userActivity {
+                options = [
+                    "activityType": userActivity.activityType,
+                    "title": userActivity.title,
+                    "requiredUserInfoKeys": userActivity.requiredUserInfoKeys,
+                    "userInfo": userActivity.userInfo,
+                    "needsSave": userActivity.needsSave,
+                    "keywords": userActivity.keywords,
+                    "persistentIndentifier": userActivity.persistentIdentifier,
+                    "isEligibleForHandoff": userActivity.isEligibleForHandoff,
+                    "isEligibleForSearch": userActivity.isEligibleForSearch,
+                    "isEligibleForPublicIndexing": userActivity.isEligibleForPublicIndexing,
+                    "expirationDate": userActivity.expirationDate,
+                    "webpageURL": userActivity.webpageURL,
+                    "isEligibleForPrediction": userActivity.isEligibleForPrediction,
+                    "suggestedInvocationPhrase": userActivity.suggestedInvocationPhrase
+                ]
+            }
+            
             return [
-                "identifier": voiceShortcut.identifier,
+                "identifier": voiceShortcut.identifier.uuidString,
                 "phrase": voiceShortcut.invocationPhrase,
-                "options": voiceShortcut.shortcut.userActivity ?? nil
+                "options": options
             ]
         }))
     }
@@ -221,7 +242,7 @@ class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelega
         presenterViewController = nil
         presentShortcutCallback?([
             ["status": status.rawValue, "phrase": voiceShortcut?.invocationPhrase]
-        ])
+            ])
         presentShortcutCallback = nil
     }
     

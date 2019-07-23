@@ -10,7 +10,6 @@
 		A03074B921808BF3008B3572 /* SiriButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03074B621808BF3008B3572 /* SiriButtonView.swift */; };
 		A03074BA21808BF3008B3572 /* RNTAddToSiriButtonManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03074B721808BF3008B3572 /* RNTAddToSiriButtonManager.swift */; };
 		A03074BB21808BF3008B3572 /* RNTAddToSiriButtonManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A03074B821808BF3008B3572 /* RNTAddToSiriButtonManager.m */; };
-		A034840B22E70C9A00472773 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A056562122E617AD005B5BC8 /* libReact.a */; };
 		A0DF6819215A827800999009 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0DF6818215A827800999009 /* Intents.framework */; };
 		A0DF6826215A9B7700999009 /* RNSiriShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DF6825215A9B7700999009 /* RNSiriShortcuts.swift */; };
 		A0DF6828215A9C2500999009 /* RNSiriShortcuts.m in Sources */ = {isa = PBXBuildFile; fileRef = A0DF6827215A9C2500999009 /* RNSiriShortcuts.m */; };
@@ -164,7 +163,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A034840B22E70C9A00472773 /* libReact.a in Frameworks */,
 				A0FDBEB32182050700C8AFCB /* IntentsUI.framework in Frameworks */,
 				A0DF6819215A827800999009 /* Intents.framework in Frameworks */,
 			);
