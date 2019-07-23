@@ -17,5 +17,6 @@ RCT_EXTERN_METHOD(clearShortcutsWithIdentifiers: (NSArray *)persistentIdentifier
 RCT_EXTERN_METHOD(donateShortcut: (NSDictionary *) options)
 RCT_EXTERN_METHOD(suggestShortcuts: (NSArray<NSDictionary *> *) options)
 RCT_EXTERN_METHOD(presentShortcut: (NSDictionary *) options callback: (RCTResponseSenderBlock) callback)
+RCT_EXTERN_METHOD(getShortcuts:(RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
 
 @end

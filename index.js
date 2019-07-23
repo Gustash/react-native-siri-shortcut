@@ -36,7 +36,8 @@ export type ShortcutOptions = {
 };
 
 export type PresentShortcutCallbackData = {
-  status: "cancelled" | "added" | "deleted" | "updated"
+  status: "cancelled" | "added" | "deleted" | "updated",
+  shortcut: string
 };
 
 const noop = () => ({});
@@ -78,4 +79,8 @@ export const clearShortcutsWithIdentifiers = safeCall(
 export const presentShortcut = safeCall(
   (opts: ShortcutOptions, callback: () => PresentShortcutCallbackData) =>
     RNSiriShortcuts.presentShortcut(opts, callback)
+);
+
+export const getShortcuts = safeCall(() =>
+  RNSiriShortcuts.getShortcuts()
 );
