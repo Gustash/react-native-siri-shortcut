@@ -88,7 +88,7 @@ import {
   donateShortcut,
   suggestShortcuts,
   clearAllShortcuts,
-  clearShortcutsWithIdentifiers
+  clearShortcutsWithIdentifiers,
 } from "react-native-siri-shortcut";
 import AddToSiriButton, {
   SiriButtonStyles
@@ -207,11 +207,20 @@ type ShortcutOptions = {
 };
 ```
 
-### Callback Type for the presentShortcut function
+### Callback Type for the `presentShortcut` function
 
 ```javascript
 type PresentShortcutCallbackData = {
   status: "cancelled" | "added" | "deleted" | "updated"
+};
+```
+
+### Data Type for `getShortcuts` function
+```javascript
+type ShortcutData = {
+  identifier: string,
+  phrase: string,
+  options?: ShortcutOptions
 };
 ```
 
@@ -289,6 +298,29 @@ try {
 }
 ```
 
+### Get recorded shortcuts
+
+```javascript
+/* ES5 */
+
+getShortcuts(shortcuts: Array<ShortcutData>)
+  .then(() => {
+    // Handle list of shortcuts
+  })
+  .catch(e => {
+    // Can't get list on <iOS 12
+  });
+
+/* ES6 */
+
+try {
+  await getShortcuts(shortcuts: Array<ShortcutData>);
+  // Handle list of shortcuts
+} catch (e) {
+  // Can't get list on <iOS 12
+}
+```
+
 ### Add to Siri button
 
 ```javascript
@@ -328,18 +360,6 @@ This will open a screen prompting the user to create a custom phrase to add the 
 
 ```javascript
 presentShortcut(options: ShortcutOptions, callback: () => PresentShortcutCallbackData)
-```
-
-It's recommended to ensure the device used by the user is on iOS 12 or later. This can be checked using `Platform`.
-
-```javascript
-import { Platform } from 'react-native';
-
-const masterVersion = parseInt(Platform.Version, 10);
-
-if (masterVersion >= 12) {
-  // presentShortcut here
-}
 ```
 
 ![Example Screen](https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios12-iphone-x-third-party-app-add-to-siri.jpg)
