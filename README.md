@@ -235,6 +235,17 @@ SiriShortcutsEvent.addListener(
 );
 ```
 
+#### Remove listener on cleanup
+
+```javascript
+SiriShortcutsEvent.removeListener(
+  "SiriShortcutListener",
+  ({ userInfo, activityType }) => {
+    // Do something with userInfo and/or activityType
+  }
+);
+```
+
 ### Donate shortcut
 
 #### Previously `createShortcut` which is now deprecated, use this instead.

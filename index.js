@@ -59,7 +59,12 @@ const safeCall = (func, minVersion = 12) => {
 export const SiriShortcutsEvent = Platform.select({
   ios: new NativeEventEmitter(RNSiriShortcuts),
   android: {
-    addListener: () => {}
+    addListener: () => {},
+    removeListener: () => {},
+    removeAllListeners: () => {},
+    removeCurrentListener: () => {},
+    removeSubscription: () => {},
+    listeners: () => {},
   }
 });
 
