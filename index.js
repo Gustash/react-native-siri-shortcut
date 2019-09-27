@@ -64,7 +64,7 @@ export const SiriShortcutsEvent = Platform.select({
     removeAllListeners: () => {},
     removeCurrentListener: () => {},
     removeSubscription: () => {},
-    listeners: () => {},
+    listeners: () => {}
   }
 });
 
@@ -92,7 +92,7 @@ export const clearShortcutsWithIdentifiers = safeCall(
 );
 
 export const supportsPresentShortcut =
-  Platform.OS === "ios" && Number.parseFloat(Platform.Version >= 12);
+  Platform.OS === "ios" && Number.parseFloat(Platform.Version) >= 12;
 
 export const presentShortcut = safeCall(
   (opts: ShortcutOptions, callback: () => PresentShortcutCallbackData) =>
