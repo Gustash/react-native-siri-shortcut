@@ -10,12 +10,12 @@ import Foundation
 
 @available(iOS 12.0, *)
 @objc (RNTAddToSiriButtonManager)
-class RNTAddToSiriButtonManager : RCTViewManager {
-    @objc override func view() -> UIView! {
+open class RNTAddToSiriButtonManager : RCTViewManager {
+    @objc override open func view() -> UIView! {
         return SiriButtonView(frame: UIScreen().bounds)
     }
     
-    override static func requiresMainQueueSetup() -> Bool {
+    override static public func requiresMainQueueSetup() -> Bool {
         return true
     }
 }
