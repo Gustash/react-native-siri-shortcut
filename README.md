@@ -215,7 +215,11 @@ type ShortcutOptions = {
   /** A Boolean value that determines whether Siri can suggest the user activity as a shortcut to the user. */
   isEligibleForPrediction?: boolean,
   /** A phrase suggested to the user when they create a shortcut. */
-  suggestedInvocationPhrase?: string
+  suggestedInvocationPhrase?: string,
+  /** Content type of this shorcut. Check available options at https://developer.apple.com/documentation/mobilecoreservices/uttype/uti_abstract_types */
+  contentType?: string,
+  /** An optional description for the shortcut. */
+  description?: string,
 };
 ```
 

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MobileCoreServices
 
 class ShortcutOptions: NSObject {
     let activityType: String
@@ -23,6 +24,8 @@ class ShortcutOptions: NSObject {
     let webpageURL: String?
     let isEligibleForPrediction: Bool
     let suggestedInvocationPhrase: String?
+    let contentDescription: String?
+    let contentType: CFString
     
     init(_ json: Dictionary<String, Any>) {
         self.activityType = RCTConvert.nsString(json["activityType"])
@@ -105,6 +108,17 @@ class ShortcutOptions: NSObject {
             self.isEligibleForPrediction = false
         }
         
+        if let description = json["description"] {
+            self.contentDescription = RCTConvert.nsString(description);
+        } else {
+            self.contentDescription = nil
+        }
+        
+        if let contentType = json["contentType"] {
+            self.contentType = RCTConvert.nsString(contentType) as CFString
+        } else {
+            self.contentType = kUTTypeItem
+        }
     }
     
     override var description: String {

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Intents
 import IntentsUI
-
+import CoreSpotlight
 
 enum VoiceShortcutMutationStatus: String {
     case cancelled = "cancelled"
@@ -110,6 +110,7 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
         activity.isEligibleForSearch = options.isEligibleForSearch
         activity.isEligibleForPublicIndexing = options.isEligibleForPublicIndexing
         activity.expirationDate = options.expirationDate
+        
         if let urlString = options.webpageURL {
             activity.webpageURL = URL(string: urlString)
         }
@@ -121,6 +122,12 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
                 activity.persistentIdentifier = NSUserActivityPersistentIdentifier(identifier)
             }
         }
+        
+        let attributes = CSSearchableItemAttributeSet(itemContentType: options.contentType as String)
+        if let description = options.contentDescription {
+            attributes.contentDescription = description
+        }
+        activity.contentAttributeSet = attributes
         
         return activity
     }
