@@ -217,7 +217,7 @@ PODS:
     - React-cxxreact (= 0.61.2)
     - React-jsi (= 0.61.2)
     - ReactCommon/jscallinvoker (= 0.61.2)
-  - RNSiriShortcuts (1.5.2):
+  - RNSiriShortcuts (1.6.1):
     - React
   - Yoga (1.14.0)
 

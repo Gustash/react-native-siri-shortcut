@@ -43,7 +43,7 @@ const opts1: ShortcutOptions = {
   isEligibleForSearch: true,
   isEligibleForPrediction: true,
   suggestedInvocationPhrase: "Say something",
-  needsSave: true
+  needsSave: true,
 };
 
 const opts2: ShortcutOptions = {
@@ -52,7 +52,8 @@ const opts2: ShortcutOptions = {
   persistentIdentifier: "some.persistent.identifier",
   isEligibleForSearch: true,
   isEligibleForPrediction: true,
-  suggestedInvocationPhrase: "What's up?"
+  suggestedInvocationPhrase: "What's up?",
+  description: "Just a random description",
 };
 type State = {
   shortcutInfo: ?any,
