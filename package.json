@@ -24,12 +24,11 @@
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
   "peerDependencies": {
-    "react": "16.8.6",
-    "react-native": "^0.60.4",
-    "react-native-swift": "^1.2.1"
+    "react": "^16.8.6",
+    "react-native": "^0.60.4"
   },
   "devDependencies": {
     "react": "16.8.6",
-    "react-native": "^0.60.4"
+    "react-native": "0.60.4"
   }
 }
