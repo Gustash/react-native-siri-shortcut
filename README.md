@@ -16,13 +16,25 @@ This package is safe-guarded for Android, so you can freely call these functions
 
 ## Getting started
 
+### For React Native >= 0.61
+
+Just install the package.
+
+`$ npm install react-native-siri-shortcut --save`
+
+### For React Native <= 0.60
+
 Install the module and react-native-swift (needed to support Swift code execution)
 
 `$ npm install react-native-siri-shortcut react-native-swift --save`
 
 ### Mostly automatic installation
 
-Link the package:
+Enable `use_frameworks!` (React Native >= 0.61):
+
+Go to your Podfile and add `use_frameworks!` under `target 'PROJECT_NAME' do`, then run `pod install` on your `ios` directory.
+
+Link the package (React Native <= 0.60):
 
 `$ react-native link react-native-siri-shortcut && react-native link react-native-swift`
 
@@ -379,5 +391,8 @@ presentShortcut(options: ShortcutOptions, callback: () => PresentShortcutCallbac
 
 Feel free to clone this repo and run the `example/` project.
 
-Just `npm install` or `yarn install` in the `example/` directory and start the
-React Native app.
+Run `npm install` or `yarn install` in the `example/` directory.
+
+Run `pod install` in the `example/ios/` directory.
+
+Build the app in XCode.
