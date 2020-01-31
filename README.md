@@ -1,3 +1,6 @@
+![NPM Version](https://img.shields.io/npm/v/react-native-siri-shortcut)
+![NPM Downloads](https://img.shields.io/npm/dm/react-native-siri-shortcut)
+
 # react-native-siri-shortcut
 
 This module lets you use the new iOS 12 Siri Shortcuts inside your React Native app.
