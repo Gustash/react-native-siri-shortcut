@@ -214,43 +214,46 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
     
     @available(iOS 12.0, *)
     @objc func presentShortcut(_ jsonOptions: Dictionary<String, Any>, callback: @escaping RCTResponseSenderBlock) {
-        presentShortcutCallback = callback
+        self.presentShortcutCallback = callback
         let activity = ShortcutsModule.generateUserActivity(jsonOptions)
-        
+
         let shortcut = INShortcut(userActivity: activity)
-        
+
         // To preserve compatilibility with iOS >9.0, the array contains NSObjects, so we need to convert here
-        let addedVoiceShortcut = (voiceShortcuts as! Array<INVoiceShortcut>).first { (voiceShortcut) -> Bool in
-            if let userActivity = voiceShortcut.shortcut.userActivity, userActivity.activityType == activity.activityType {
-                return true
-            }
-            return false
+        let addedVoiceShortcut = (self.voiceShortcuts as! Array<INVoiceShortcut>).first { (voiceShortcut) -> Bool in
+          if let userActivity = voiceShortcut.shortcut.userActivity, userActivity.activityType == activity.activityType {
+            return true
+          }
+          return false
         }
-        
+
+      DispatchQueue.main.async {
         // The shortcut was not added yet, so present a form to add it
         if (addedVoiceShortcut == nil) {
-            presenterViewController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
-            presenterViewController!.modalPresentationStyle = .formSheet
-            (presenterViewController as! INUIAddVoiceShortcutViewController).delegate = self
+          self.presenterViewController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
+          self.presenterViewController!.modalPresentationStyle = .formSheet
+          (self.presenterViewController as! INUIAddVoiceShortcutViewController).delegate = self
         } // The shortcut was already added, so we present a form to edit it
         else {
-            presenterViewController = INUIEditVoiceShortcutViewController(voiceShortcut: addedVoiceShortcut!)
-            presenterViewController!.modalPresentationStyle = .formSheet
-            (presenterViewController as! INUIEditVoiceShortcutViewController).delegate = self
+          self.presenterViewController = INUIEditVoiceShortcutViewController(voiceShortcut: addedVoiceShortcut!)
+          self.presenterViewController!.modalPresentationStyle = .formSheet
+          (self.presenterViewController as! INUIEditVoiceShortcutViewController).delegate = self
         }
-        DispatchQueue.main.async {
-            UIApplication.shared.keyWindow!.rootViewController!.present(self.presenterViewController!, animated: true, completion: nil)
-        }
+
+        UIApplication.shared.keyWindow!.rootViewController!.present(self.presenterViewController!, animated: true, completion: nil)
+      }
     }
-    
+
     @available(iOS 12.0, *)
     func dismissPresenter(_ status: VoiceShortcutMutationStatus, withShortcut voiceShortcut: INVoiceShortcut?) {
-        presenterViewController?.dismiss(animated: true, completion: nil)
-        presenterViewController = nil
-        presentShortcutCallback?([
-            ["status": status.rawValue, "phrase": voiceShortcut?.invocationPhrase]
-            ])
-        presentShortcutCallback = nil
+      DispatchQueue.main.async {
+        self.presenterViewController?.dismiss(animated: true, completion: nil)
+        self.presenterViewController = nil
+        self.presentShortcutCallback?([
+          ["status": status.rawValue, "phrase": voiceShortcut?.invocationPhrase]
+        ])
+        self.presentShortcutCallback = nil
+      }
     }
     
     @available(iOS 12.0, *)
