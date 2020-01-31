@@ -1,5 +1,9 @@
-![NPM Version](https://img.shields.io/npm/v/react-native-siri-shortcut)
-![NPM Downloads](https://img.shields.io/npm/dm/react-native-siri-shortcut)
+<a href="https://www.npmjs.com/package/react-native-siri-shortcut">
+  <img src="https://img.shields.io/npm/v/react-native-siri-shortcut" />
+</a>
+<a href="https://www.npmjs.com/package/react-native-siri-shortcut">
+  <img src="https://img.shields.io/npm/dm/react-native-siri-shortcut" />
+</a>
 
 # react-native-siri-shortcut
 
