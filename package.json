@@ -13,7 +13,15 @@
     "baseUrl": "https://github.com/Gustash/react-native-siri-shortcut"
   },
   "keywords": [
-    "react-native"
+    "react-native",
+    "siri",
+    "ios",
+    "siri-shortcuts",
+    "shortcuts",
+    "automation",
+    "swift",
+    "react-component",
+    "native"
   ],
   "author": {
     "name": "Gustavo Parreira",
