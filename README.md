@@ -371,16 +371,16 @@ import { supportsSiriButton } from 'react-native-siri-shortcut/AddToSiriButton';
 ```
 
 #### Black Theme
-![Black Theme](https://developer.apple.com/design/human-interface-guidelines/sirikit/images/AddToSiri-Black.png)
+![Black Theme](https://developer.apple.com/design/human-interface-guidelines/siri/images/AddToSiri-Black.png)
 
 #### Black Outline Theme
-![Black Outline Theme](https://developer.apple.com/design/human-interface-guidelines/sirikit/images/AddToSiri-Black-Outlined.png)
+![Black Outline Theme](https://developer.apple.com/design/human-interface-guidelines/siri/images/AddToSiri-Black-Outlined.png)
 
 #### White Theme
-![White Theme](https://developer.apple.com/design/human-interface-guidelines/sirikit/images/AddToSiri-White.png)
+![White Theme](https://developer.apple.com/design/human-interface-guidelines/siri/images/AddToSiri-White.png)
 
 #### White Outline Theme
-![White Outline Theme](https://developer.apple.com/design/human-interface-guidelines/sirikit/images/AddToSiri-White-Outlined.png)
+![White Outline Theme](https://developer.apple.com/design/human-interface-guidelines/siri/images/AddToSiri-White-Outlined.png)
 
 ### Present shortcut
 
