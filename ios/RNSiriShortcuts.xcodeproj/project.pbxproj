@@ -150,6 +150,7 @@
 		A03074B721808BF3008B3572 /* RNTAddToSiriButtonManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNTAddToSiriButtonManager.swift; sourceTree = "<group>"; };
 		A03074B821808BF3008B3572 /* RNTAddToSiriButtonManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNTAddToSiriButtonManager.m; sourceTree = "<group>"; };
 		A056560D22E617AD005B5BC8 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		A0B14919242E32F9002C9B67 /* RNSiriShortcuts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNSiriShortcuts.h; sourceTree = "<group>"; };
 		A0DF6818215A827800999009 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		A0DF6824215A9B7600999009 /* RNSiriShortcuts-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNSiriShortcuts-Bridging-Header.h"; sourceTree = "<group>"; };
 		A0DF6825215A9B7700999009 /* RNSiriShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNSiriShortcuts.swift; sourceTree = "<group>"; };
@@ -182,6 +183,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				A0B14919242E32F9002C9B67 /* RNSiriShortcuts.h */,
 				A03074B821808BF3008B3572 /* RNTAddToSiriButtonManager.m */,
 				A03074B721808BF3008B3572 /* RNTAddToSiriButtonManager.swift */,
 				A03074B621808BF3008B3572 /* SiriButtonView.swift */,

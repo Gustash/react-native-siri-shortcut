@@ -217,7 +217,7 @@ PODS:
     - React-cxxreact (= 0.61.2)
     - React-jsi (= 0.61.2)
     - ReactCommon/jscallinvoker (= 0.61.2)
-  - RNSiriShortcuts (1.6.3):
+  - RNSiriShortcuts (1.6.6):
     - React
   - Yoga (1.14.0)
 
@@ -253,7 +253,7 @@ DEPENDENCIES:
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - boost-for-react-native
 
 EXTERNAL SOURCES:
@@ -336,9 +336,9 @@ SPEC CHECKSUMS:
   React-RCTText: e3ef6191cdb627855ff7fe8fa0c1e14094967fb8
   React-RCTVibration: fb54c732fd20405a76598e431aa2f8c2bf527de9
   ReactCommon: 5848032ed2f274fcb40f6b9ec24067787c42d479
-  RNSiriShortcuts: c956bf3695f8db865acfada2560294a87f679502
+  RNSiriShortcuts: f4abe5f72dde6b871480fbdb527e98a70fa1a1d7
   Yoga: 14927e37bd25376d216b150ab2a561773d57911f
 
-PODFILE CHECKSUM: ee797d6207ce4350f3ed3bf5715da080f9f4bb49
+PODFILE CHECKSUM: 59194e4b22198e299a99b71946e7bf9e82b97943
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.9.1
