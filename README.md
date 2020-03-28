@@ -17,27 +17,41 @@ This package is safe-guarded for Android, so you can freely call these functions
 
 ## Getting started
 
-### For React Native >= 0.61
+### The easy way (use_frameworks!)
 
 Just install the package.
 
 `$ npm install react-native-siri-shortcut --save`
 
-### For React Native <= 0.60
+Add `use_frameworks!` under your target in your `Podfile`.
 
-Install the module and react-native-swift (needed to support Swift code execution)
+Run `pod install` in the `ios/` directory.
 
-`$ npm install react-native-siri-shortcut react-native-swift --save`
+Done. Skip to the changes in `AppDelegate.m`.
 
-### Mostly automatic installation
+### The not-so-easy way
 
-Enable `use_frameworks!` (React Native >= 0.61):
+If you can't use `use_frameworks!`, install the package:
 
-Go to your Podfile and add `use_frameworks!` under `target 'PROJECT_NAME' do`, then run `pod install` on your `ios` directory.
+`$ npm install react-native-siri-shortcut --save`
 
-Link the package (React Native <= 0.60):
+Create a Bridging Header file:
 
-`$ react-native link react-native-siri-shortcut && react-native link react-native-swift`
+Add a new file to Xcode (File > New > File), then select “Source” and click “Swift File“.
+
+Name it anything you want. Select "Yes" when asked if you want to create a Bridging Header File.
+
+Delete everything in the new Swift file.
+
+### If you have React Native <= 0.60
+
+Manually link the package.
+
+`$ react-native link react-native-siri-shortcut`
+
+Run `pod install` in the `ios/` directory.
+
+### Changes to the AppDelegate.m
 
 Add these lines to your AppDelegate.m to get shortcut data from a cold-launch.
 
@@ -45,7 +59,7 @@ Add these lines to your AppDelegate.m to get shortcut data from a cold-launch.
 // AppDelegate.m
 
 // ... imports
-#import <RNSiriShortcuts/RNSiriShortcuts-Swift.h>
+@import RNSiriShortcuts;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -88,10 +102,6 @@ continueUserActivity:(NSUserActivity *)userActivity
 - Enable the Siri capabilities for your project in the Capabilities tab.
 - Go to you Info.plist and add a new key `NSUserActivityTypes` of type `Array`
   and add your different activity types as `String`.
-
-### Manual installation
-
-TODO: Detail manual installation process.
 
 ## Usage
 
