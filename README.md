@@ -43,6 +43,8 @@ Name it anything you want. Select "Yes" when asked if you want to create a Bridg
 
 Delete everything in the new Swift file.
 
+Run `pod install` in the `ios/` directory.
+
 ### If you have React Native <= 0.60
 
 Manually link the package.
