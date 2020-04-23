@@ -4241,8 +4241,9 @@ react-is@^16.8.1, react-is@^16.8.4, react-is@^16.8.6:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
 
-"react-native-siri-shortcut@file:..":
-  version "1.6.3"
+"react-native-siri-shortcut@link:..":
+  version "0.0.0"
+  uid ""
 
 react-native@0.61.2:
   version "0.61.2"

@@ -5,12 +5,12 @@
   "scripts": {
     "start": "yarn react-native start",
     "test": "jest",
-    "postinstall": "node ../scripts/examples_postinstall.js node_modules/react-native-siri-shortcut"
+    "ios": "react-native run-ios --simulator='iPhone 11'"
   },
   "dependencies": {
     "react": "16.9.0",
     "react-native": "0.61.2",
-    "react-native-siri-shortcut": "file:.."
+    "react-native-siri-shortcut": "link:.."
   },
   "devDependencies": {
     "@babel/core": "^7.5.0",
