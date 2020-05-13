@@ -217,7 +217,7 @@ PODS:
     - React-cxxreact (= 0.61.2)
     - React-jsi (= 0.61.2)
     - ReactCommon/jscallinvoker (= 0.61.2)
-  - RNSiriShortcuts (1.7.0):
+  - RNSiriShortcuts (1.8.0):
     - React
   - Yoga (1.14.0)
 
@@ -336,7 +336,7 @@ SPEC CHECKSUMS:
   React-RCTText: e3ef6191cdb627855ff7fe8fa0c1e14094967fb8
   React-RCTVibration: fb54c732fd20405a76598e431aa2f8c2bf527de9
   ReactCommon: 5848032ed2f274fcb40f6b9ec24067787c42d479
-  RNSiriShortcuts: 4d157e913d8f22e30737d69b895c0aabbb8f55e0
+  RNSiriShortcuts: 357068929983feca1d172267890331ec15468831
   Yoga: 14927e37bd25376d216b150ab2a561773d57911f
 
 PODFILE CHECKSUM: 59194e4b22198e299a99b71946e7bf9e82b97943
