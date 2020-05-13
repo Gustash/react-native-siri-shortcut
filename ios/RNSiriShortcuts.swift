@@ -42,23 +42,19 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
         
         super.init()
         
-        // Get all added voice shortcuts so we can make sure later if the presented shortcut is to be edited or added
-        if #available(iOS 12.0, *) {
-            INVoiceShortcutCenter.shared.getAllVoiceShortcuts  { (voiceShortcutsFromCenter, error) in
-                guard let voiceShortcutsFromCenter = voiceShortcutsFromCenter else {
-                    if let error = error as NSError? {
-                        NSLog("Failed to fetch voice shortcuts with error: \(error.userInfo)")
-                    }
-                    return
-                }
-                self.voiceShortcuts = voiceShortcutsFromCenter
-            }
-        }
+        syncVoiceShortcuts()
         
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(startedFromShortcut(notification:)),
             name: NSNotification.Name(rawValue: "InitialUserActivity"),
+            object: nil
+        )
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appMovedToForeground),
+            name: UIApplication.willEnterForegroundNotification,
             object: nil
         )
     }
@@ -313,6 +309,25 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
     public func editVoiceShortcutViewControllerDidCancel(_ controller: INUIEditVoiceShortcutViewController) {
         // Shortcut edit was cancelled
         dismissPresenter(.cancelled, withShortcut: nil)
+    }
+
+    func syncVoiceShortcuts() {
+        // Get all added voice shortcuts so we can make sure later if the presented shortcut is to be edited or added
+        if #available(iOS 12.0, *) {
+            INVoiceShortcutCenter.shared.getAllVoiceShortcuts  { (voiceShortcutsFromCenter, error) in
+                guard let voiceShortcutsFromCenter = voiceShortcutsFromCenter else {
+                    if let error = error as NSError? {
+                        NSLog("Failed to fetch voice shortcuts with error: \(error.userInfo)")
+                    }
+                    return
+                }
+                self.voiceShortcuts = voiceShortcutsFromCenter
+            }
+        }
+    }
+
+    @objc func appMovedToForeground() {
+        syncVoiceShortcuts()
     }
     
     // become current
