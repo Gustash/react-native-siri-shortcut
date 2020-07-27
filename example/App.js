@@ -3,19 +3,19 @@
  * https://github.com/facebook/react-native
  *
  * @format
- * @flow
+ * @flow strict-local
  */
-import type { ShortcutOptions, ShortcutData } from "react-native-siri-shortcut";
+import type {ShortcutOptions, ShortcutData} from 'react-native-siri-shortcut';
 
-import React, { Component } from "react";
+import React, {Component} from 'react';
 import {
   StyleSheet,
   Text,
   ScrollView,
   Button,
   SafeAreaView,
-  View
-} from "react-native";
+  View,
+} from 'react-native';
 import {
   SiriShortcutsEvent,
   donateShortcut,
@@ -23,56 +23,56 @@ import {
   clearAllShortcuts,
   clearShortcutsWithIdentifiers,
   presentShortcut,
-  getShortcuts
-} from "react-native-siri-shortcut";
+  getShortcuts,
+} from 'react-native-siri-shortcut';
 import AddToSiriButton, {
   SiriButtonStyles,
-  supportsSiriButton
-} from "react-native-siri-shortcut/AddToSiriButton";
+  supportsSiriButton,
+} from 'react-native-siri-shortcut/AddToSiriButton';
 
 const opts1: ShortcutOptions = {
-  activityType: "com.github.gustash.SiriShortcutsExample.sayHello",
-  title: "Say Hi",
+  activityType: 'com.github.gustash.SiriShortcutsExample.sayHello',
+  title: 'Say Hi',
   userInfo: {
     foo: 1,
-    bar: "baz",
-    baz: 34.5
+    bar: 'baz',
+    baz: 34.5,
   },
-  keywords: ["kek", "foo", "bar"],
-  persistentIdentifier: "com.github.gustash.SiriShortcutsExample.sayHello",
+  keywords: ['kek', 'foo', 'bar'],
+  persistentIdentifier: 'com.github.gustash.SiriShortcutsExample.sayHello',
   isEligibleForSearch: true,
   isEligibleForPrediction: true,
-  suggestedInvocationPhrase: "Say something",
+  suggestedInvocationPhrase: 'Say something',
   needsSave: true,
 };
 
 const opts2: ShortcutOptions = {
-  activityType: "com.github.gustash.SiriShortcutsExample.somethingElse",
-  title: "Something Else",
-  persistentIdentifier: "some.persistent.identifier",
+  activityType: 'com.github.gustash.SiriShortcutsExample.somethingElse',
+  title: 'Something Else',
+  persistentIdentifier: 'some.persistent.identifier',
   isEligibleForSearch: true,
   isEligibleForPrediction: true,
   suggestedInvocationPhrase: "What's up?",
-  description: "Just a random description",
+  description: 'Just a random description',
 };
 type State = {
   shortcutInfo: ?any,
   shortcutActivityType: ?string,
   addToSiriStyle: 0 | 1 | 2 | 3,
-  shortcuts: Array<ShortcutData>
+  shortcuts: Array<ShortcutData>,
 };
 export default class App extends Component<void, State> {
   state: State = {
     shortcutInfo: null,
     shortcutActivityType: null,
     addToSiriStyle: SiriButtonStyles.blackOutline,
-    shortcuts: []
+    shortcuts: [],
   };
 
   componentDidMount() {
     SiriShortcutsEvent.addListener(
-      "SiriShortcutListener",
-      this.handleSiriShortcut.bind(this)
+      'SiriShortcutListener',
+      this.handleSiriShortcut.bind(this),
     );
 
     // This will suggest these two shortcuts so that they appear
@@ -84,10 +84,10 @@ export default class App extends Component<void, State> {
     this.updateShortcutList();
   }
 
-  handleSiriShortcut({ userInfo, activityType }: any) {
+  handleSiriShortcut({userInfo, activityType}: any) {
     this.setState({
       shortcutInfo: userInfo,
-      shortcutActivityType: activityType
+      shortcutActivityType: activityType,
     });
   }
 
@@ -102,9 +102,9 @@ export default class App extends Component<void, State> {
   async clearShortcut1() {
     try {
       await clearShortcutsWithIdentifiers([
-        "com.github.gustash.SiriShortcutsExample.sayHello"
+        'com.github.gustash.SiriShortcutsExample.sayHello',
       ]);
-      alert("Cleared Shortcut 1");
+      alert('Cleared Shortcut 1');
     } catch (e) {
       alert("You're not running iOS 12!");
     }
@@ -112,8 +112,8 @@ export default class App extends Component<void, State> {
 
   async clearShortcut2() {
     try {
-      await clearShortcutsWithIdentifiers(["some.persistent.identifier"]);
-      alert("Cleared Shortcut 2");
+      await clearShortcutsWithIdentifiers(['some.persistent.identifier']);
+      alert('Cleared Shortcut 2');
     } catch (e) {
       alert("You're not running iOS 12!");
     }
@@ -124,7 +124,7 @@ export default class App extends Component<void, State> {
       const shortcuts = await getShortcuts();
 
       this.setState({
-        shortcuts
+        shortcuts,
       });
     } catch (e) {
       alert("You're not running iOS 12!");
@@ -134,10 +134,10 @@ export default class App extends Component<void, State> {
   async clearBothShortcuts() {
     try {
       await clearShortcutsWithIdentifiers([
-        "com.github.gustash.SiriShortcutsExample.sayHello",
-        "some.persistent.identifier"
+        'com.github.gustash.SiriShortcutsExample.sayHello',
+        'some.persistent.identifier',
       ]);
-      alert("Cleared Both Shortcuts");
+      alert('Cleared Both Shortcuts');
     } catch (e) {
       alert("You're not running iOS 12!");
     }
@@ -146,22 +146,21 @@ export default class App extends Component<void, State> {
   async clearShortcuts() {
     try {
       await clearAllShortcuts();
-      alert("Deleted all the shortcuts");
+      alert('Deleted all the shortcuts');
     } catch (e) {
       alert("You're not running iOS 12!");
     }
   }
 
   swapSiriButtonTheme() {
-    const { addToSiriStyle } = this.state;
+    const {addToSiriStyle} = this.state;
 
     const styles = Object.keys(SiriButtonStyles).map(
-      key => SiriButtonStyles[key]
+      (key) => SiriButtonStyles[key],
     );
-    const index = styles.findIndex(style => style === addToSiriStyle);
-    if (index === styles.length - 1)
-      this.setState({ addToSiriStyle: styles[0] });
-    else this.setState({ addToSiriStyle: styles[index + 1] });
+    const index = styles.findIndex((style) => style === addToSiriStyle);
+    if (index === styles.length - 1) this.setState({addToSiriStyle: styles[0]});
+    else this.setState({addToSiriStyle: styles[index + 1]});
   }
 
   render() {
@@ -169,19 +168,18 @@ export default class App extends Component<void, State> {
       shortcutInfo,
       shortcutActivityType,
       addToSiriStyle,
-      shortcuts
+      shortcuts,
     } = this.state;
 
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView
           style={styles.container}
-          contentContainerStyle={styles.contentContainer}
-        >
-          <Text>Shortcut Activity Type: {shortcutActivityType || "None"}</Text>
+          contentContainerStyle={styles.contentContainer}>
+          <Text>Shortcut Activity Type: {shortcutActivityType || 'None'}</Text>
           <Text>
-            Shortcut Info:{" "}
-            {shortcutInfo ? JSON.stringify(shortcutInfo) : "No shortcut data."}
+            Shortcut Info:{' '}
+            {shortcutInfo ? JSON.stringify(shortcutInfo) : 'No shortcut data.'}
           </Text>
           <Button
             title="Create Shortcut 1"
@@ -216,7 +214,7 @@ export default class App extends Component<void, State> {
               <AddToSiriButton
                 buttonStyle={addToSiriStyle}
                 onPress={() => {
-                  presentShortcut(opts1, ({ status }) => {
+                  presentShortcut(opts1, ({status}) => {
                     console.log(`I was ${status}`);
                   });
                 }}
@@ -229,7 +227,7 @@ export default class App extends Component<void, State> {
             </>
           )}
           {shortcuts.length ? (
-            shortcuts.map(({ identifier, phrase, options }, i) => (
+            shortcuts.map(({identifier, phrase, options}, i) => (
               <View key={identifier}>
                 <Text>Shortcut {i + 1}:</Text>
                 <Text>Identifier - {identifier}</Text>
@@ -249,10 +247,10 @@ export default class App extends Component<void, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5FCFF"
+    backgroundColor: '#F5FCFF',
   },
   contentContainer: {
-    justifyContent: "center",
-    alignItems: "center"
-  }
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
