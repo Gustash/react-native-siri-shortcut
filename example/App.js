@@ -31,7 +31,7 @@ import AddToSiriButton, {
 } from 'react-native-siri-shortcut/AddToSiriButton';
 
 const opts1: ShortcutOptions = {
-  activityType: 'com.github.gustash.SiriShortcutsExample.sayHello',
+  activityType: 'com.github.gustash.SiriShortcutsModuleExample.sayHello',
   title: 'Say Hi',
   userInfo: {
     foo: 1,
@@ -39,7 +39,8 @@ const opts1: ShortcutOptions = {
     baz: 34.5,
   },
   keywords: ['kek', 'foo', 'bar'],
-  persistentIdentifier: 'com.github.gustash.SiriShortcutsExample.sayHello',
+  persistentIdentifier:
+    'com.github.gustash.SiriShortcutsModuleExample.sayHello',
   isEligibleForSearch: true,
   isEligibleForPrediction: true,
   suggestedInvocationPhrase: 'Say something',
@@ -47,7 +48,7 @@ const opts1: ShortcutOptions = {
 };
 
 const opts2: ShortcutOptions = {
-  activityType: 'com.github.gustash.SiriShortcutsExample.somethingElse',
+  activityType: 'com.github.gustash.SiriShortcutsModuleExample.somethingElse',
   title: 'Something Else',
   persistentIdentifier: 'some.persistent.identifier',
   isEligibleForSearch: true,
@@ -102,7 +103,7 @@ export default class App extends Component<void, State> {
   async clearShortcut1() {
     try {
       await clearShortcutsWithIdentifiers([
-        'com.github.gustash.SiriShortcutsExample.sayHello',
+        'com.github.gustash.SiriShortcutsModuleExample.sayHello',
       ]);
       alert('Cleared Shortcut 1');
     } catch (e) {
@@ -134,7 +135,7 @@ export default class App extends Component<void, State> {
   async clearBothShortcuts() {
     try {
       await clearShortcutsWithIdentifiers([
-        'com.github.gustash.SiriShortcutsExample.sayHello',
+        'com.github.gustash.SiriShortcutsModuleExample.sayHello',
         'some.persistent.identifier',
       ]);
       alert('Cleared Both Shortcuts');
