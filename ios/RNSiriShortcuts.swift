@@ -135,7 +135,6 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
             UIApplication.shared.keyWindow!.rootViewController!.userActivity = activity
         }
         activity.becomeCurrent()
-        print("Just created shortcut")
     }
     
     @available(iOS 12.0, *)
@@ -147,7 +146,6 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
         
         // Suggest the shortcuts.
         INVoiceShortcutCenter.shared.setShortcutSuggestions(suggestions)
-        print("Created suggested shortcuts")
     }
     
     @objc func clearAllShortcuts(_ resolve: @escaping RCTPromiseResolveBlock,

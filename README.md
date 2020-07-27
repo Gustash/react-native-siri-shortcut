@@ -72,10 +72,9 @@ Add these lines to your AppDelegate.m to get shortcut data from a cold-launch.
   // Add a boolean to the initialProperties to let the app know you got the initial shortcut
   NSDictionary *initialProperties = @{ @"launchedFromShortcut":@(launchedFromShortcut) };
 
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
-                                                      moduleName:@"example"
-                                               initialProperties:initialProperties // Add the initial properties here
-                                                   launchOptions:launchOptions];
+  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
+                                                   moduleName:@"example"
+                                            initialProperties:initialProperties]; // Add the initial properties here
 
   ...
 }
@@ -240,16 +239,17 @@ type ShortcutOptions = {
 
 ```javascript
 type PresentShortcutCallbackData = {
-  status: "cancelled" | "added" | "deleted" | "updated"
+  status: "cancelled" | "added" | "deleted" | "updated",
 };
 ```
 
 ### Data Type for `getShortcuts` function
+
 ```javascript
 type ShortcutData = {
   identifier: string,
   phrase: string,
-  options?: ShortcutOptions
+  options?: ShortcutOptions,
 };
 ```
 
@@ -278,10 +278,11 @@ SiriShortcutsEvent.removeListener(
 ### Donate shortcut
 
 #### Previously `createShortcut` which is now deprecated, use this instead.
-Donate shortcut for an activity each time the user does it. For example, each time the user orders soup you may want to donate an activity that is relevant to ordering soup. Siri will use this information to then potentially recommend this activity to the user in their spotlight etc. These recommendations are based on factors such as time and location. *Do not* donate an activity if the user hasn't done it.
+
+Donate shortcut for an activity each time the user does it. For example, each time the user orders soup you may want to donate an activity that is relevant to ordering soup. Siri will use this information to then potentially recommend this activity to the user in their spotlight etc. These recommendations are based on factors such as time and location. _Do not_ donate an activity if the user hasn't done it.
 
 ```javascript
-donateShortcut(options: ShortcutOptions);
+donateShortcut((options: ShortcutOptions));
 ```
 
 ### Suggest shortcuts
@@ -289,7 +290,7 @@ donateShortcut(options: ShortcutOptions);
 Suggest shortcut for an activity if you would like an activity to appear in Siri Shortcuts without the user having to do it and thus before you'd donate it. This is geared towards more general actions that you believe users may want to use in Shortcuts even if they haven't made use of it in your app.
 
 ```javascript
-suggestShortcuts(shortcuts: Array<ShortcutOptions>);
+suggestShortcuts((shortcuts: Array<ShortcutOptions>));
 ```
 
 ### Clear all shortcuts
@@ -301,7 +302,7 @@ clearAllShortcuts()
   .then(() => {
     // Successfully cleared
   })
-  .catch(e => {
+  .catch((e) => {
     // Can't clear on <iOS 12
   });
 
@@ -320,18 +321,18 @@ try {
 ```javascript
 /* ES5 */
 
-clearShortcutsWithIdentifiers(identifierArray: Array<string>)
+clearShortcutsWithIdentifiers((identifierArray: Array<string>))
   .then(() => {
     // Successfully cleared
   })
-  .catch(e => {
+  .catch((e) => {
     // Can't clear on <iOS 12
   });
 
 /* ES6 */
 
 try {
-  await clearShortcutsWithIdentifiers(identifierArray: Array<string>);
+  await clearShortcutsWithIdentifiers((identifierArray: Array<string>));
   // Successfully cleared
 } catch (e) {
   // Can't clear on <iOS 12
@@ -343,18 +344,18 @@ try {
 ```javascript
 /* ES5 */
 
-getShortcuts(shortcuts: Array<ShortcutData>)
+getShortcuts((shortcuts: Array<ShortcutData>))
   .then(() => {
     // Handle list of shortcuts
   })
-  .catch(e => {
+  .catch((e) => {
     // Can't get list on <iOS 12
   });
 
 /* ES6 */
 
 try {
-  await getShortcuts(shortcuts: Array<ShortcutData>);
+  await getShortcuts((shortcuts: Array<ShortcutData>));
   // Handle list of shortcuts
 } catch (e) {
   // Can't get list on <iOS 12
@@ -367,8 +368,8 @@ try {
 <AddToSiriButton
   style={style: ViewStyleProps}
   buttonStyle={SiriButtonStyles.white: 0 | 1 | 2 | 3} // Recommended you use the exported SiriButtonStyles object
-  onPress={() => { 
-    console.log('I was pressed!') 
+  onPress={() => {
+    console.log('I was pressed!')
   }: () => void}
   shortcut={options: ShortcutOptions}
 />
@@ -377,21 +378,27 @@ try {
 #### Check if the button is available
 
 ```javascript
-import { supportsSiriButton } from 'react-native-siri-shortcut/AddToSiriButton';
+import { supportsSiriButton } from "react-native-siri-shortcut/AddToSiriButton";
 
-{supportsSiriButton && <AddToSiriButton {...props} />}
+{
+  supportsSiriButton && <AddToSiriButton {...props} />;
+}
 ```
 
 #### Black Theme
+
 ![Black Theme](https://developer.apple.com/design/human-interface-guidelines/siri/images/AddToSiri-Black.png)
 
 #### Black Outline Theme
+
 ![Black Outline Theme](https://developer.apple.com/design/human-interface-guidelines/siri/images/AddToSiri-Black-Outlined.png)
 
 #### White Theme
+
 ![White Theme](https://developer.apple.com/design/human-interface-guidelines/siri/images/AddToSiri-White.png)
 
 #### White Outline Theme
+
 ![White Outline Theme](https://developer.apple.com/design/human-interface-guidelines/siri/images/AddToSiri-White-Outlined.png)
 
 ### Present shortcut
@@ -399,7 +406,10 @@ import { supportsSiriButton } from 'react-native-siri-shortcut/AddToSiriButton';
 This will open a screen prompting the user to create a custom phrase to add the shortcut provided to Siri. If the user has already added the shortcut before, the screen will give them the option to either update or delete the shortcut from their Siri.
 
 ```javascript
-presentShortcut(options: ShortcutOptions, callback: () => PresentShortcutCallbackData)
+presentShortcut(
+  (options: ShortcutOptions),
+  (callback: () => PresentShortcutCallbackData)
+);
 ```
 
 ![Example Screen](https://support.apple.com/library/content/dam/edam/applecare/images/en_US/iOS/ios12-iphone-x-third-party-app-add-to-siri.jpg)

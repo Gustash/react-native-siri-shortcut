@@ -51,11 +51,12 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSUserActivityTypes</key>
-	<array>
-		<string>com.github.gustash.SiriShortcutsExample.sayHello</string>
-	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>com.github.gustash.SiriShortcutsModuleExample.sayHello</string>
+		<string>com.github.gustash.SiriShortcutsModuleExample.somethingElse</string>
+	</array>
 </dict>
 </plist>
