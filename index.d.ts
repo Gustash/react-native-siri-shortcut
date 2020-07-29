@@ -36,7 +36,7 @@ export function suggestShortcuts(options: Array<ShortcutOptions>): void;
 
 export function presentShortcut(
   options: ShortcutOptions,
-  callback: () => PresentShortcutCallbackData
+  callback: (data: PresentShortcutCallbackData) => void
 ): void;
 
 export function getShortcuts(): Promise<Array<ShortcutData>>;
