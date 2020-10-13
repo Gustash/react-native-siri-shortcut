@@ -71,7 +71,7 @@ Add these lines to your AppDelegate.m to get shortcut data from a cold-launch.
   BOOL launchedFromShortcut = [launchOptions objectForKey:@"UIApplicationLaunchOptionsUserActivityDictionaryKey"] != nil;
   // Add a boolean to the initialProperties to let the app know you got the initial shortcut
   NSDictionary *initialProperties = @{ @"launchedFromShortcut":@(launchedFromShortcut) };
-
+  RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"example"
                                             initialProperties:initialProperties]; // Add the initial properties here
