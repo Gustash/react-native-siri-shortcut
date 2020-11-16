@@ -18,6 +18,6 @@ type Props = {
 
 declare const AddtoSiriButton: React.ComponentType<Props>;
 
-export const supportsSiriButton: boolean
+export const supportsSiriButton: boolean;
 
 export default AddtoSiriButton;
