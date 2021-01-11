@@ -28,7 +28,7 @@
     "email": "gustavotcparreira@gmail.com"
   },
   "homepage": "https://github.com/Gustash/react-native-siri-shortcut",
-  "license": "MIT",
+  "license": "GPLv3",
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
   "peerDependencies": {
