@@ -19,10 +19,6 @@ enum VoiceShortcutMutationStatus: String {
     case deleted = "deleted"
 }
 
-enum RNSiriShortcutsError: Error {
-    case notSupported
-}
-
 @objc(ShortcutsModule)
 open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
     var hasListeners: Bool = false
@@ -173,16 +169,11 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
                             rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
         self.fetchRecorderdVoiceShortcuts { voiceShortcuts, error in
             if let error = error {
-                switch error {
-                case RNSiriShortcutsError.notSupported:
-                    reject("get_shortcuts_failure", "Not supported on OS version", nil)
-                default:
-                    reject("get_shortcuts_failure", error.localizedDescription, error)
-                }
+                reject("get_shortcuts_failure", error.localizedDescription, error)
                 return
             }
             
-            if let voiceShortcuts = voiceShortcuts as? [INVoiceShortcut] {
+            if let voiceShortcuts = voiceShortcuts {
                 let result = voiceShortcuts.map { voiceShortcut -> [String: Any?] in
                     var options: [String: Any?]? = nil
                     if let userActivity = voiceShortcut.shortcut.userActivity {
@@ -220,14 +211,23 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
     
     @available(iOS 12.0, *)
     @objc func presentShortcut(_ jsonOptions: Dictionary<String, Any>, callback: @escaping RCTResponseSenderBlock) {
-        self.presentShortcutCallback = callback
         let activity = ShortcutsModule.generateUserActivity(jsonOptions)
 
         let shortcut = INShortcut(userActivity: activity)
         
         self.fetchRecorderdVoiceShortcuts { voiceShortcuts, error in
-            // To preserve compatilibility with iOS >9.0, the array contains NSObjects, so we need to convert here
-            let voiceShortcuts = voiceShortcuts as! [INVoiceShortcut]
+            guard let voiceShortcuts = voiceShortcuts else {
+                if let error = error {
+                    callback([["status": VoiceShortcutMutationStatus.cancelled.rawValue,
+                               "error": "failed to fetch recorded shortcuts: \(error)"]])
+                    return
+                }
+                callback([["status": VoiceShortcutMutationStatus.cancelled.rawValue,
+                           "error": "unknown error fetching recorded shortcuts"]])
+                return
+            }
+
+            self.presentShortcutCallback = callback
             let addedVoiceShortcut = voiceShortcuts.first { (voiceShortcut) -> Bool in
               if let userActivity = voiceShortcut.shortcut.userActivity, userActivity.activityType == activity.activityType {
                 return true
@@ -313,26 +313,23 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
         self.editingVoiceShortcut = nil
     }
 
-    func fetchRecorderdVoiceShortcuts(completion: @escaping ([NSObject]?, Error?) -> Void) {
+    @available(iOS 12.0, *)
+    func fetchRecorderdVoiceShortcuts(completion: @escaping ([INVoiceShortcut]?, Error?) -> Void) {
         // Get all added voice shortcuts so we can make sure later if the presented shortcut is to be edited or added
-        if #available(iOS 12.0, *) {
-            INVoiceShortcutCenter.shared.getAllVoiceShortcuts  { (voiceShortcutsFromCenter, error) in
-                if let error = error {
-                    completion(nil, error)
-                    return
-                }
-
-                if let voiceShortcutsFromCenter = voiceShortcutsFromCenter {
-                    completion(voiceShortcutsFromCenter, nil)
-                    return
-                }
-
-                completion(nil, nil)
+        INVoiceShortcutCenter.shared.getAllVoiceShortcuts  { (voiceShortcutsFromCenter, error) in
+            if let error = error {
+                completion(nil, error)
+                return
             }
-            return
+
+            if let voiceShortcutsFromCenter = voiceShortcutsFromCenter {
+                completion(voiceShortcutsFromCenter, nil)
+                return
+            }
+
+            completion(nil, nil)
         }
-        
-        completion(nil, RNSiriShortcutsError.notSupported)
+        return
     }
     
     // become current
