@@ -19,12 +19,16 @@ enum VoiceShortcutMutationStatus: String {
     case deleted = "deleted"
 }
 
+enum RNSiriShortcutsError: Error {
+    case notSupported
+}
+
 @objc(ShortcutsModule)
 open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
     var hasListeners: Bool = false
     
+    var editingVoiceShortcut: NSObject? // Keep support for iOS <9
     var presenterViewController: UIViewController?
-    var voiceShortcuts: Array<NSObject> = [] // Actually it's INVoiceShortcut, but that way we would have to break compatibility with simple NSUserActivity behaviour
     var presentShortcutCallback: RCTResponseSenderBlock?
     @objc public static var initialUserActivity: NSUserActivity?
     
@@ -39,22 +43,12 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
     }
     
     override init() {
-        
         super.init()
-        
-        syncVoiceShortcuts()
         
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(startedFromShortcut(notification:)),
             name: NSNotification.Name(rawValue: "InitialUserActivity"),
-            object: nil
-        )
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(appMovedToForeground),
-            name: UIApplication.willEnterForegroundNotification,
             object: nil
         )
     }
@@ -176,34 +170,52 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
     
     @available(iOS 12.0, *)
     @objc func getShortcuts(_ resolve: @escaping RCTPromiseResolveBlock,
-                            rejecter reject: RCTPromiseRejectBlock) -> Void {
-        resolve((voiceShortcuts as! Array<INVoiceShortcut>).map({ (voiceShortcut) -> [String: Any?] in
-            var options: [String: Any?]? = nil
-            if let userActivity = voiceShortcut.shortcut.userActivity {
-                options = [
-                    "activityType": userActivity.activityType,
-                    "title": userActivity.title,
-                    "requiredUserInfoKeys": userActivity.requiredUserInfoKeys,
-                    "userInfo": userActivity.userInfo,
-                    "needsSave": userActivity.needsSave,
-                    "keywords": userActivity.keywords,
-                    "persistentIndentifier": userActivity.persistentIdentifier,
-                    "isEligibleForHandoff": userActivity.isEligibleForHandoff,
-                    "isEligibleForSearch": userActivity.isEligibleForSearch,
-                    "isEligibleForPublicIndexing": userActivity.isEligibleForPublicIndexing,
-                    "expirationDate": userActivity.expirationDate,
-                    "webpageURL": userActivity.webpageURL,
-                    "isEligibleForPrediction": userActivity.isEligibleForPrediction,
-                    "suggestedInvocationPhrase": userActivity.suggestedInvocationPhrase
-                ]
+                            rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+        self.fetchRecorderdVoiceShortcuts { voiceShortcuts, error in
+            if let error = error {
+                switch error {
+                case RNSiriShortcutsError.notSupported:
+                    reject("get_shortcuts_failure", "Not supported on OS version", nil)
+                default:
+                    reject("get_shortcuts_failure", error.localizedDescription, error)
+                }
+                return
             }
             
-            return [
-                "identifier": voiceShortcut.identifier.uuidString,
-                "phrase": voiceShortcut.invocationPhrase,
-                "options": options
-            ]
-        }))
+            if let voiceShortcuts = voiceShortcuts as? [INVoiceShortcut] {
+                let result = voiceShortcuts.map { voiceShortcut -> [String: Any?] in
+                    var options: [String: Any?]? = nil
+                    if let userActivity = voiceShortcut.shortcut.userActivity {
+                        options = [
+                            "activityType": userActivity.activityType,
+                            "title": userActivity.title,
+                            "requiredUserInfoKeys": userActivity.requiredUserInfoKeys,
+                            "userInfo": userActivity.userInfo,
+                            "needsSave": userActivity.needsSave,
+                            "keywords": userActivity.keywords,
+                            "persistentIndentifier": userActivity.persistentIdentifier,
+                            "isEligibleForHandoff": userActivity.isEligibleForHandoff,
+                            "isEligibleForSearch": userActivity.isEligibleForSearch,
+                            "isEligibleForPublicIndexing": userActivity.isEligibleForPublicIndexing,
+                            "expirationDate": userActivity.expirationDate,
+                            "webpageURL": userActivity.webpageURL,
+                            "isEligibleForPrediction": userActivity.isEligibleForPrediction,
+                            "suggestedInvocationPhrase": userActivity.suggestedInvocationPhrase
+                        ]
+                    }
+                    
+                    return [
+                        "identifier": voiceShortcut.identifier.uuidString,
+                        "phrase": voiceShortcut.invocationPhrase,
+                        "options": options
+                    ]
+                }
+                resolve(result)
+                return
+            }
+            
+            reject("get_shortcuts_failure", "An unknown error has occurred. Please open an issue on GitHub.", nil)
+        }
     }
     
     @available(iOS 12.0, *)
@@ -212,30 +224,36 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
         let activity = ShortcutsModule.generateUserActivity(jsonOptions)
 
         let shortcut = INShortcut(userActivity: activity)
+        
+        self.fetchRecorderdVoiceShortcuts { voiceShortcuts, error in
+            // To preserve compatilibility with iOS >9.0, the array contains NSObjects, so we need to convert here
+            let voiceShortcuts = voiceShortcuts as! [INVoiceShortcut]
+            let addedVoiceShortcut = voiceShortcuts.first { (voiceShortcut) -> Bool in
+              if let userActivity = voiceShortcut.shortcut.userActivity, userActivity.activityType == activity.activityType {
+                return true
+              }
+              return false
+            }
 
-        // To preserve compatilibility with iOS >9.0, the array contains NSObjects, so we need to convert here
-        let addedVoiceShortcut = (self.voiceShortcuts as! Array<INVoiceShortcut>).first { (voiceShortcut) -> Bool in
-          if let userActivity = voiceShortcut.shortcut.userActivity, userActivity.activityType == activity.activityType {
-            return true
-          }
-          return false
+            DispatchQueue.main.async {
+                if let addedVoiceShortcut = addedVoiceShortcut {
+                    // The shortcut was already added, so we present a form to edit it
+                    self.editingVoiceShortcut = addedVoiceShortcut
+                    let presenterViewController = INUIEditVoiceShortcutViewController(voiceShortcut: addedVoiceShortcut)
+                    presenterViewController.modalPresentationStyle = .formSheet
+                    presenterViewController.delegate = self
+                    self.presenterViewController = presenterViewController
+                } else {
+                    // The shortcut was not added yet, so present a form to add it
+                    let presenterViewController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
+                    presenterViewController.modalPresentationStyle = .formSheet
+                    presenterViewController.delegate = self
+                    self.presenterViewController = presenterViewController
+                }
+
+                UIApplication.shared.keyWindow!.rootViewController!.present(self.presenterViewController!, animated: true, completion: nil)
+            }
         }
-
-      DispatchQueue.main.async {
-        // The shortcut was not added yet, so present a form to add it
-        if (addedVoiceShortcut == nil) {
-          self.presenterViewController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
-          self.presenterViewController!.modalPresentationStyle = .formSheet
-          (self.presenterViewController as! INUIAddVoiceShortcutViewController).delegate = self
-        } // The shortcut was already added, so we present a form to edit it
-        else {
-          self.presenterViewController = INUIEditVoiceShortcutViewController(voiceShortcut: addedVoiceShortcut!)
-          self.presenterViewController!.modalPresentationStyle = .formSheet
-          (self.presenterViewController as! INUIEditVoiceShortcutViewController).delegate = self
-        }
-
-        UIApplication.shared.keyWindow!.rootViewController!.present(self.presenterViewController!, animated: true, completion: nil)
-      }
     }
 
     @available(iOS 12.0, *)
@@ -251,11 +269,11 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
     }
     
     @available(iOS 12.0, *)
-    public func addVoiceShortcutViewController(_ controller: INUIAddVoiceShortcutViewController, didFinishWith voiceShortcut: INVoiceShortcut?, error: Error?) {
+    public func addVoiceShortcutViewController(_ controller: INUIAddVoiceShortcutViewController,
+                                               didFinishWith voiceShortcut: INVoiceShortcut?,
+                                               error: Error?)
+    {
         // Shortcut was added
-        if (voiceShortcut != nil) {
-            voiceShortcuts.append(voiceShortcut!)
-        }
         dismissPresenter(.added, withShortcut: voiceShortcut)
     }
     
@@ -266,66 +284,55 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
     }
     
     @available(iOS 12.0, *)
-    public func editVoiceShortcutViewController(_ controller: INUIEditVoiceShortcutViewController, didUpdate voiceShortcut: INVoiceShortcut?, error: Error?) {
+    public func editVoiceShortcutViewController(_ controller: INUIEditVoiceShortcutViewController,
+                                                didUpdate voiceShortcut: INVoiceShortcut?,
+                                                error: Error?)
+    {
         // Shortcut was updated
-        
-        if (voiceShortcut != nil) {
-            // Update the array with the shortcut that was updated, just so we don't have to loop over the existing shortcuts again
-            let indexOfUpdatedShortcut = (voiceShortcuts as! Array<INVoiceShortcut>).firstIndex { (shortcut) -> Bool in
-                return shortcut.identifier == voiceShortcut!.identifier
-            }
-            
-            if (indexOfUpdatedShortcut != nil) {
-                voiceShortcuts[indexOfUpdatedShortcut!] = voiceShortcut!
-            }
-        }
-        
         dismissPresenter(.updated, withShortcut: voiceShortcut)
+        self.editingVoiceShortcut = nil
     }
     
     @available(iOS 12.0, *)
-    public func editVoiceShortcutViewController(_ controller: INUIEditVoiceShortcutViewController, didDeleteVoiceShortcutWithIdentifier deletedVoiceShortcutIdentifier: UUID) {
+    public func editVoiceShortcutViewController(_ controller: INUIEditVoiceShortcutViewController,
+                                                didDeleteVoiceShortcutWithIdentifier deletedVoiceShortcutIdentifier: UUID) {
         // Shortcut was deleted
-        
-        // Keep a reference so we can notify JS about what the invocationPhrase was for this shortcut
-        var deletedShortcut: INVoiceShortcut? = nil
-        
-        // Remove the deleted shortcut from the array
-        let indexOfDeletedShortcut = (voiceShortcuts as! Array<INVoiceShortcut>).firstIndex { (shortcut) -> Bool in
-            return shortcut.identifier == deletedVoiceShortcutIdentifier
+        guard let editingVoiceShortcut = self.editingVoiceShortcut as? INVoiceShortcut else {
+            print("Could not find shortcut being edited.")
+            dismissPresenter(.deleted, withShortcut: nil)
+            return
         }
-        
-        if (indexOfDeletedShortcut != nil) {
-            deletedShortcut = voiceShortcuts[indexOfDeletedShortcut!] as? INVoiceShortcut
-            voiceShortcuts.remove(at: indexOfDeletedShortcut!)
-        }
-        
-        dismissPresenter(.deleted, withShortcut: deletedShortcut)
+        dismissPresenter(.deleted, withShortcut: editingVoiceShortcut)
+        self.editingVoiceShortcut = nil
     }
     
     @available(iOS 12.0, *)
     public func editVoiceShortcutViewControllerDidCancel(_ controller: INUIEditVoiceShortcutViewController) {
         // Shortcut edit was cancelled
         dismissPresenter(.cancelled, withShortcut: nil)
+        self.editingVoiceShortcut = nil
     }
 
-    func syncVoiceShortcuts() {
+    func fetchRecorderdVoiceShortcuts(completion: @escaping ([NSObject]?, Error?) -> Void) {
         // Get all added voice shortcuts so we can make sure later if the presented shortcut is to be edited or added
         if #available(iOS 12.0, *) {
             INVoiceShortcutCenter.shared.getAllVoiceShortcuts  { (voiceShortcutsFromCenter, error) in
-                guard let voiceShortcutsFromCenter = voiceShortcutsFromCenter else {
-                    if let error = error as NSError? {
-                        NSLog("Failed to fetch voice shortcuts with error: \(error.userInfo)")
-                    }
+                if let error = error {
+                    completion(nil, error)
                     return
                 }
-                self.voiceShortcuts = voiceShortcutsFromCenter
-            }
-        }
-    }
 
-    @objc func appMovedToForeground() {
-        syncVoiceShortcuts()
+                if let voiceShortcutsFromCenter = voiceShortcutsFromCenter {
+                    completion(voiceShortcutsFromCenter, nil)
+                    return
+                }
+
+                completion(nil, nil)
+            }
+            return
+        }
+        
+        completion(nil, RNSiriShortcutsError.notSupported)
     }
     
     // become current
