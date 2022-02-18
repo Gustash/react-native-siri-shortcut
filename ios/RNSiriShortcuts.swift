@@ -23,7 +23,16 @@ enum VoiceShortcutMutationStatus: String {
 open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
     var hasListeners: Bool = false
     
-    var editingVoiceShortcut: NSObject? // Keep support for iOS <9
+    var _editingVoiceShortcut: NSObject? // Keep support for iOS <9
+    @available(iOS 12.0, *)
+    var editingVoiceShortcut: INVoiceShortcut? {
+        get {
+            _editingVoiceShortcut as? INVoiceShortcut
+        }
+        set {
+           _editingVoiceShortcut = newValue
+        }
+    }
     var presenterViewController: UIViewController?
     var presentShortcutCallback: RCTResponseSenderBlock?
     @objc public static var initialUserActivity: NSUserActivity?
@@ -297,7 +306,7 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
     public func editVoiceShortcutViewController(_ controller: INUIEditVoiceShortcutViewController,
                                                 didDeleteVoiceShortcutWithIdentifier deletedVoiceShortcutIdentifier: UUID) {
         // Shortcut was deleted
-        guard let editingVoiceShortcut = self.editingVoiceShortcut as? INVoiceShortcut else {
+        guard let editingVoiceShortcut = self.editingVoiceShortcut else {
             print("Could not find shortcut being edited.")
             dismissPresenter(.deleted, withShortcut: nil)
             return
