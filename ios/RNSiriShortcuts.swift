@@ -249,16 +249,15 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
                     // The shortcut was already added, so we present a form to edit it
                     self.editingVoiceShortcut = addedVoiceShortcut
                     let presenterViewController = INUIEditVoiceShortcutViewController(voiceShortcut: addedVoiceShortcut)
-                    presenterViewController.modalPresentationStyle = .formSheet
                     presenterViewController.delegate = self
                     self.presenterViewController = presenterViewController
                 } else {
                     // The shortcut was not added yet, so present a form to add it
                     let presenterViewController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
-                    presenterViewController.modalPresentationStyle = .formSheet
                     presenterViewController.delegate = self
                     self.presenterViewController = presenterViewController
                 }
+                self.presenterViewController!.modalPresentationStyle = .formSheet
 
                 UIApplication.shared.keyWindow!.rootViewController!.present(self.presenterViewController!, animated: true, completion: nil)
             }
