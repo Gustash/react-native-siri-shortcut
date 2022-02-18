@@ -338,7 +338,6 @@ open class ShortcutsModule: RCTEventEmitter, INUIAddVoiceShortcutViewControllerD
 
             completion(nil, nil)
         }
-        return
     }
     
     // become current
