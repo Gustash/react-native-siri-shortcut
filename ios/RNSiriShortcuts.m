@@ -445,11 +445,6 @@ API_AVAILABLE(ios(12.0))
 {
     // Shortcut was deleted
     INVoiceShortcut * _Nullable deletedShortcut = [self editingVoiceShortcut];
-    if (deletedShortcut == nil) {
-        [self dismissPresenterWithStatus:MutationStatusDeleted
-                           voiceShortcut:nil];
-        return;
-    }
     [self dismissPresenterWithStatus:MutationStatusDeleted
                        voiceShortcut:deletedShortcut];
     [self setEditingVoiceShortcut:nil];
