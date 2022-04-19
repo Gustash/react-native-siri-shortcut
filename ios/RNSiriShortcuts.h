@@ -9,5 +9,20 @@
 #ifndef RNSiriShortcuts_h
 #define RNSiriShortcuts_h
 
+#import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface RNSiriShortcuts : RCTEventEmitter <RCTBridgeModule>
+
+@property (class, nonatomic, strong) NSUserActivity * _Nullable initialUserActivity;
+
++ (NSUserActivity *)generateUserActivityFromJsonOptions:(NSDictionary<NSString *, id> *)jsonOptions;
++ (void)shortcutReceived:(NSUserActivity *)activity;
+
+@end
+
+NS_ASSUME_NONNULL_END
 
 #endif /* RNSiriShortcuts_h */
