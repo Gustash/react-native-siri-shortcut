@@ -44,6 +44,7 @@ NSString *MutationStatusToString(enum MutationStatus status) {
     UIViewController * _Nullable _presenterViewController;
     BOOL _hasListeners;
 }
+@synthesize bridge;
 
 RCT_EXPORT_MODULE();
 
@@ -66,39 +67,29 @@ API_AVAILABLE(ios(12.0))
 
 #pragma mark Class Properties
 
-static NSUserActivity * _Nullable _initialUserActivity = nil;
-
-+ (NSUserActivity *)initialUserActivity
-{
-    return _initialUserActivity;
-}
-
-+ (void)setInitialUserActivity:(NSUserActivity *)initialUserActivity
-{
-    if (initialUserActivity != _initialUserActivity) {
-        _initialUserActivity = initialUserActivity;
-    }
-}
-
-+ (void)shortcutReceived:(NSUserActivity *)activity
-{
-    NSDictionary * _Nullable userInfo = activity.userInfo;
-    NSString *activityType = activity.activityType;
-    
++ (BOOL)application:(UIApplication *)application
+continueUserActivity:(NSUserActivity *)userActivity
+ restorationHandler:
+#if defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= 12000) /* __IPHONE_12_0 */
+(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> *_Nullable))restorationHandler {
+#else
+(nonnull void (^)(NSArray *_Nullable))restorationHandler {
+#endif
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-    [notificationCenter postNotificationName:@"InitialUserActivity"
+    [notificationCenter postNotificationName:@"shortcutReceived"
                                       object:nil
                                     userInfo:@{
-        @"userInfo": userInfo ?: [NSNull null],
-        @"activityType": activityType,
+        @"userInfo": RCTNullIfNil(userActivity.userInfo),
+        @"activityType": userActivity.activityType,
     }];
+    return YES;
 }
 
 #pragma mark RCTBridgeModule
 
 + (BOOL)requiresMainQueueSetup
 {
-    return YES;
+    return NO;
 }
 
 #pragma mark Contructors
@@ -109,8 +100,8 @@ static NSUserActivity * _Nullable _initialUserActivity = nil;
     if (self) {
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         [notificationCenter addObserver:self
-                               selector:@selector(startedFromShortcutWithNotification:)
-                                   name:@"InitialUserActivity"
+                               selector:@selector(handleReceivedShortcutNotification:)
+                                   name:@"shortcutReceived"
                                  object:nil];
     }
     return self;
@@ -118,15 +109,13 @@ static NSUserActivity * _Nullable _initialUserActivity = nil;
 
 #pragma mark Observers
 
-- (void)startedFromShortcutWithNotification:(NSNotification *)notification
+- (void)handleReceivedShortcutNotification:(NSNotification *)notification
 {
-    if (notification.userInfo == nil) {
-        return;
-    }
+    NSDictionary *activityInfo = notification.userInfo;
     
     if (_hasListeners) {
         [self sendEventWithName:@"SiriShortcutListener"
-                           body:notification.userInfo];
+                           body:activityInfo];
     }
 }
 
@@ -136,16 +125,21 @@ static NSUserActivity * _Nullable _initialUserActivity = nil;
 {
     _hasListeners = YES;
     
-    NSUserActivity *initialUserActivity = RNSiriShortcuts.initialUserActivity;
-    if (initialUserActivity != nil) {
-        [RNSiriShortcuts shortcutReceived:initialUserActivity];
-        RNSiriShortcuts.initialUserActivity = nil;
-    }
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter addObserver:self
+                           selector:@selector(handleReceivedShortcutNotification:)
+                               name:@"shortcutReceived"
+                             object:nil];
 }
 
 - (void)stopObserving
 {
     _hasListeners = NO;
+    
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter removeObserver:self
+                                  name:@"shortcutReceived"
+                                object:nil];
 }
 
 - (NSArray<NSString *> *)supportedEvents
@@ -154,6 +148,30 @@ static NSUserActivity * _Nullable _initialUserActivity = nil;
 }
 
 #pragma mark RCT_EXPORT_METHODS
+
+RCT_EXPORT_METHOD(getInitialShortcut:(RCTPromiseResolveBlock)resolve
+                  rejecter:(__unused RCTPromiseRejectBlock)reject)
+{
+    // Extract the NSUserActivity data from launchOptions
+    NSDictionary *userActivityDictionary = bridge.launchOptions[UIApplicationLaunchOptionsUserActivityDictionaryKey];
+    NSDictionary * _Nullable shortcutInfo = nil;
+    
+    // If there was no NSUserActivity in launchOptions, the app was not launched from a shortcut
+    if (userActivityDictionary) {
+        NSArray<NSString *> *activityTypes = [NSBundle mainBundle].infoDictionary[@"NSUserActivityTypes"];
+        // Check if the NSUserActivity.activityType matches one of the NSUserActivityTypes defined in Info.plist
+        // If not, it was not launched from a shortcut that we should handle
+        if ([activityTypes containsObject:userActivityDictionary[UIApplicationLaunchOptionsUserActivityTypeKey]]) {
+            NSUserActivity *userActivity = userActivityDictionary[@"UIApplicationLaunchOptionsUserActivityKey"];
+            shortcutInfo = @{
+                @"userInfo": RCTNullIfNil(userActivity.userInfo),
+                @"activityType": userActivity.activityType,
+            };
+        }
+    }
+    
+    resolve(RCTNullIfNil(shortcutInfo));
+}
 
 RCT_EXPORT_METHOD(clearAllShortcuts:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
@@ -305,26 +323,26 @@ RCT_EXPORT_METHOD(getShortcuts:(RCTPromiseResolveBlock)resolve
                 if (userActivity != nil) {
                     options = @{
                         @"activityType": userActivity.activityType,
-                        @"title": userActivity.title ?: [NSNull null],
-                        @"requiredUserInfoKeys": userActivity.requiredUserInfoKeys ?: [NSNull null],
-                        @"userInfo": userActivity.userInfo ?: [NSNull null],
+                        @"title": RCTNullIfNil(userActivity.title),
+                        @"requiredUserInfoKeys": RCTNullIfNil(userActivity.requiredUserInfoKeys),
+                        @"userInfo": RCTNullIfNil(userActivity.userInfo),
                         @"needsSave": @(userActivity.needsSave),
-                        @"keywords": userActivity.keywords ?: [NSNull null],
-                        @"persistentIndentifier": userActivity.persistentIdentifier ?: [NSNull null],
+                        @"keywords": RCTNullIfNil(userActivity.keywords),
+                        @"persistentIndentifier": RCTNullIfNil(userActivity.persistentIdentifier),
                         @"isEligibleForHandoff": @(userActivity.isEligibleForHandoff),
                         @"isEligibleForSearch": @(userActivity.isEligibleForSearch),
                         @"isEligibleForPublicIndexing": @(userActivity.isEligibleForPublicIndexing),
-                        @"expirationDate": userActivity.expirationDate ?: [NSNull null],
-                        @"webpageURL": userActivity.webpageURL ?: [NSNull null],
+                        @"expirationDate": RCTNullIfNil(userActivity.expirationDate),
+                        @"webpageURL": RCTNullIfNil(userActivity.webpageURL),
                         @"isEligibleForPrediction": @(userActivity.isEligibleForPrediction),
-                        @"suggestedInvocationPhrase": userActivity.suggestedInvocationPhrase ?: [NSNull null],
+                        @"suggestedInvocationPhrase": RCTNullIfNil(userActivity.suggestedInvocationPhrase),
                     };
                 }
                 
                 [result addObject:@{
                     @"identifier": voiceShortcut.identifier.UUIDString,
                     @"phrase": voiceShortcut.invocationPhrase,
-                    @"options": options ?: [NSNull null],
+                    @"options": RCTNullIfNil(options),
                 }];
             }
             resolve(result);
@@ -373,7 +391,7 @@ API_AVAILABLE(ios(12.0))
             self->_presentShortcutCallback(@[
                 @{
                     @"status": MutationStatusToString(status),
-                    @"phrase": invocationPhrase ?: [NSNull null],
+                    @"phrase": RCTNullIfNil(invocationPhrase),
                 }
             ]);
             self->_presentShortcutCallback = nil;

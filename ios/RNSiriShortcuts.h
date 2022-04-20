@@ -9,16 +9,24 @@
 #ifndef RNSiriShortcuts_h
 #define RNSiriShortcuts_h
 
-#import <React/RCTBridgeModule.h>
+#if defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= 12000) /* __IPHONE_12_0 */
+#import <UIKit/UIUserActivity.h>
+#endif
+
 #import <React/RCTEventEmitter.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface RNSiriShortcuts : RCTEventEmitter <RCTBridgeModule>
+@interface RNSiriShortcuts : RCTEventEmitter
 
-@property (class, nonatomic, strong) NSUserActivity * _Nullable initialUserActivity;
-
-+ (void)shortcutReceived:(NSUserActivity *)activity;
++ (BOOL)application:(nonnull UIApplication *)application
+    continueUserActivity:(nonnull NSUserActivity *)userActivity
+      restorationHandler:
+        #if defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= 12000) /* __IPHONE_12_0 */
+            (nonnull void (^)(NSArray<id<UIUserActivityRestoring>> *_Nullable))restorationHandler;
+        #else
+            (nonnull void (^)(NSArray *_Nullable))restorationHandler;
+        #endif
 
 @end
 

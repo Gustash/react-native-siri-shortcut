@@ -44,6 +44,11 @@ export type ShortcutData = {
   options?: ShortcutOptions
 };
 
+export type ShortcutInfo = {
+  activityType: string,
+  userInfo: ?object,
+}
+
 const noop = () => ({});
 const safeCall = (func, minVersion = 12) => {
   if (
@@ -59,7 +64,7 @@ const safeCall = (func, minVersion = 12) => {
 export const SiriShortcutsEvent = Platform.select({
   ios: new NativeEventEmitter(RNSiriShortcuts),
   android: {
-    addListener: () => {},
+    addListener: () => ({remove: () => {}}),
     removeListener: () => {},
     removeAllListeners: () => {},
     removeCurrentListener: () => {},
@@ -100,3 +105,9 @@ export const presentShortcut = safeCall(
 );
 
 export const getShortcuts = safeCall(() => RNSiriShortcuts.getShortcuts());
+
+export const getInitialShortcut = safeCall(() => RNSiriShortcuts.getInitialShortcut(), 9);
+
+export const addShortcutListener = (callback: (shortcut: ShortcutInfo) => void) => {
+  return SiriShortcutsEvent.addListener("SiriShortcutListener", callback);
+}

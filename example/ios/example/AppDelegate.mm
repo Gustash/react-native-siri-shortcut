@@ -42,13 +42,7 @@
   bridge.surfacePresenter = _bridgeAdapter.surfacePresenter;
 #endif
 
-  // Check if the app launched with any shortcuts
-  BOOL launchedFromShortcut = [launchOptions objectForKey:@"UIApplicationLaunchOptionsUserActivityDictionaryKey"] != nil;
-  // Add a boolean to the initialProperties to let the app know you got the initial shortcut
-  NSDictionary *initialProperties = @{ @"launchedFromShortcut":@(launchedFromShortcut) };
-  UIView *rootView = RCTAppSetupDefaultRootView(bridge,
-                                                @"example",
-                                                initialProperties); // Add the initial properties here
+  UIView *rootView = RCTAppSetupDefaultRootView(bridge, @"example", nil);
 
   if (@available(iOS 13.0, *)) {
     rootView.backgroundColor = [UIColor systemBackgroundColor];
@@ -116,19 +110,7 @@
 continueUserActivity:(NSUserActivity *)userActivity
  restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
-  UIViewController *viewController = self.window.rootViewController;
-  RCTRootView *rootView = (RCTRootView *)viewController.view;
-  
-  // If the initial properties say the app launched from a shortcut (see above), tell the library about it.
-  if ([[rootView.appProperties objectForKey:@"launchedFromShortcut"] boolValue]) {
-    RNSiriShortcuts.initialUserActivity = userActivity;
-    
-    rootView.appProperties = @{ @"launchedFromShortcut": @NO };
-  }
-  
-  [RNSiriShortcuts shortcutReceived:userActivity];
-  
-  return YES;
+  return [RNSiriShortcuts application:application continueUserActivity:userActivity restorationHandler:restorationHandler];
 }
 
 @end

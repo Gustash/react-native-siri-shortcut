@@ -1,4 +1,4 @@
-import { NativeEventEmitter } from "react-native";
+import { EmitterSubscription, NativeEventEmitter } from "react-native";
 
 export type ShortcutOptions = {
   activityType: string;
@@ -28,7 +28,18 @@ export type ShortcutData = {
   options?: ShortcutOptions;
 };
 
+export type ShortcutInfo = {
+  activityType: string;
+  userInfo?: { [key: string]: any };
+}
+
+/** @deprecated Use `addShortcutListener` instead. */
 export const SiriShortcutsEvent: NativeEventEmitter;
+
+export function getInitialShortcut(): Promise<ShortcutInfo | null>;
+
+export type ShortcutListener = (shortcut: ShortcutInfo) => void;
+export function addShortcutListener(callback: ShortcutListener): EmitterSubscription;
 
 export function donateShortcut(options: ShortcutOptions): void;
 

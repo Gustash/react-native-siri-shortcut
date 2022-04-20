@@ -5,7 +5,11 @@
  * @format
  * @flow strict-local
  */
-import type {ShortcutOptions, ShortcutData} from 'react-native-siri-shortcut';
+import type {
+  ShortcutOptions,
+  ShortcutData,
+  ShortcutInfo,
+} from 'react-native-siri-shortcut';
 
 import React, {Component} from 'react';
 import {
@@ -15,15 +19,17 @@ import {
   Button,
   SafeAreaView,
   View,
+  EmitterSubscription,
 } from 'react-native';
 import {
-  SiriShortcutsEvent,
   donateShortcut,
   suggestShortcuts,
   clearAllShortcuts,
   clearShortcutsWithIdentifiers,
   presentShortcut,
   getShortcuts,
+  addShortcutListener,
+  getInitialShortcut,
 } from 'react-native-siri-shortcut';
 import AddToSiriButton, {
   SiriButtonStyles,
@@ -38,6 +44,7 @@ const opts1: ShortcutOptions = {
     bar: 'baz',
     baz: 34.5,
   },
+  requiredUserInfoKeys: ['foo', 'bar', 'baz'],
   keywords: ['kek', 'foo', 'bar'],
   persistentIdentifier:
     'com.github.gustash.SiriShortcutsModuleExample.sayHello',
@@ -63,6 +70,8 @@ type State = {
   shortcuts: Array<ShortcutData>,
 };
 export default class App extends Component<void, State> {
+  listener: ?EmitterSubscription = null;
+
   state: State = {
     shortcutInfo: null,
     shortcutActivityType: null,
@@ -71,10 +80,8 @@ export default class App extends Component<void, State> {
   };
 
   componentDidMount() {
-    SiriShortcutsEvent.addListener(
-      'SiriShortcutListener',
-      this.handleSiriShortcut.bind(this),
-    );
+    this.handleInitialShortcut();
+    this.listener = addShortcutListener(this.handleSiriShortcut.bind(this));
 
     // This will suggest these two shortcuts so that they appear
     // in Settings > Siri & Search, even if they are not yet
@@ -85,7 +92,23 @@ export default class App extends Component<void, State> {
     this.updateShortcutList();
   }
 
-  handleSiriShortcut({userInfo, activityType}: any) {
+  componentWillUnmount() {
+    if (this.listener) {
+      this.listener.remove();
+    }
+  }
+
+  async handleInitialShortcut() {
+    const initialShortcut = await getInitialShortcut();
+
+    if (!initialShortcut) {
+      return;
+    }
+
+    this.handleSiriShortcut(initialShortcut);
+  }
+
+  handleSiriShortcut({userInfo, activityType}: ShortcutInfo) {
     this.setState({
       shortcutInfo: userInfo,
       shortcutActivityType: activityType,
@@ -157,20 +180,16 @@ export default class App extends Component<void, State> {
     const {addToSiriStyle} = this.state;
 
     const styles = Object.keys(SiriButtonStyles).map(
-      (key) => SiriButtonStyles[key],
+      key => SiriButtonStyles[key],
     );
-    const index = styles.findIndex((style) => style === addToSiriStyle);
+    const index = styles.findIndex(style => style === addToSiriStyle);
     if (index === styles.length - 1) this.setState({addToSiriStyle: styles[0]});
     else this.setState({addToSiriStyle: styles[index + 1]});
   }
 
   render() {
-    const {
-      shortcutInfo,
-      shortcutActivityType,
-      addToSiriStyle,
-      shortcuts,
-    } = this.state;
+    const {shortcutInfo, shortcutActivityType, addToSiriStyle, shortcuts} =
+      this.state;
 
     return (
       <SafeAreaView style={styles.container}>
