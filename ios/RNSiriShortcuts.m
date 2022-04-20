@@ -6,7 +6,7 @@
 //
 
 #import "RNSiriShortcuts.h"
-#import "ShortcutOptions.h"
+#import "NSUserActivity+ShortcutOptions.h"
 #import <React/RCTBridgeModule.h>
 #import <React/RCTConvert.h>
 #import <React/RCTEventEmitter.h>
@@ -187,7 +187,7 @@ RCT_EXPORT_METHOD(clearShortcutsWithIdentifiers:(NSArray *)persistentIdentifiers
 
 RCT_EXPORT_METHOD(donateShortcut:(NSDictionary *)options)
 {
-    NSUserActivity *activity = [RNSiriShortcuts generateUserActivityFromJsonOptions:options];
+    NSUserActivity *activity = [[NSUserActivity alloc] initWithJSONOptions:options];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIApplication sharedApplication]
@@ -204,7 +204,7 @@ RCT_EXPORT_METHOD(suggestShortcuts:(NSArray<NSDictionary *> *)shortcutOptionsArr
         NSMutableArray<INShortcut *> *suggestions = [NSMutableArray new];
         
         for (NSDictionary *options in shortcutOptionsArr) {
-            NSUserActivity *activity = [RNSiriShortcuts generateUserActivityFromJsonOptions:options];
+            NSUserActivity *activity = [[NSUserActivity alloc] initWithJSONOptions:options];
             [suggestions addObject:[[INShortcut alloc] initWithUserActivity:activity]];
         }
         
@@ -216,7 +216,7 @@ RCT_EXPORT_METHOD(presentShortcut:(NSDictionary *)options
                   callback:(RCTResponseSenderBlock)callback)
 {
     if (@available(iOS 12.0, *)) {
-        NSUserActivity *activity = [RNSiriShortcuts generateUserActivityFromJsonOptions:options];
+        NSUserActivity *activity = [[NSUserActivity alloc] initWithJSONOptions:options];
     
         INShortcut *shortcut = [[INShortcut alloc] initWithUserActivity:activity];
         
@@ -379,42 +379,6 @@ API_AVAILABLE(ios(12.0))
             self->_presentShortcutCallback = nil;
         }
     });
-}
-
-#pragma mark Converters
-
-+ (NSUserActivity *)generateUserActivityFromJsonOptions:(NSDictionary<NSString *, id> *)jsonOptions
-{
-    ShortcutOptions *options = [[ShortcutOptions alloc] initWithJSONOptions:jsonOptions];
-    
-    NSUserActivity *activity = [[NSUserActivity alloc] initWithActivityType:options.activityType];
-    activity.title = options.title;
-    activity.requiredUserInfoKeys = options.requiredUserInfoKeys;
-    activity.userInfo = options.userInfo;
-    activity.needsSave = options.needsSave;
-    activity.keywords = [[NSSet alloc] initWithArray:options.keywords ? options.keywords : @[]];
-    [activity setEligibleForHandoff:options.isEligibleForHandoff];
-    [activity setEligibleForSearch:options.isEligibleForSearch];
-    [activity setEligibleForPublicIndexing:options.isEligibleForPublicIndexing];
-    activity.expirationDate = options.expirationDate;
-    
-    if (options.webpageURL) {
-        activity.webpageURL = [[NSURL alloc] initWithString:options.webpageURL];
-    }
-    
-    if (@available(iOS 12.0, *)) {
-        [activity setEligibleForPrediction:options.isEligibleForPrediction];
-        activity.suggestedInvocationPhrase = options.suggestedInvocationPhrase;
-        activity.persistentIdentifier = options.persistentIdentifier;
-    }
-    
-    CSSearchableItemAttributeSet *attributes = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:(NSString *)options.contentType];
-    if (options.contentDescription) {
-        attributes.contentDescription = options.contentDescription;
-    }
-    activity.contentAttributeSet = attributes;
-    
-    return activity;
 }
 
 #pragma mark INUIAddVoiceShortcutViewControllerDelegate

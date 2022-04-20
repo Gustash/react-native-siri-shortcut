@@ -56,7 +56,7 @@ public class SiriButtonView : UIView {
     
     @objc(setShortcut:)
     public func setShortcut(_ jsonOptions: Dictionary<String, Any>) {
-        let activity = RNSiriShortcuts.generateUserActivity(fromJsonOptions: jsonOptions)
+        let activity = NSUserActivity(jsonOptions: jsonOptions)
         let shortcut = INShortcut(userActivity: activity)
         setupButton(style: self.style, shortcut: shortcut)
     }

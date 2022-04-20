@@ -18,7 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nonatomic, strong) NSUserActivity * _Nullable initialUserActivity;
 
-+ (NSUserActivity *)generateUserActivityFromJsonOptions:(NSDictionary<NSString *, id> *)jsonOptions;
 + (void)shortcutReceived:(NSUserActivity *)activity;
 
 @end
