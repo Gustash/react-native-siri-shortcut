@@ -111,3 +111,8 @@ export const getInitialShortcut = safeCall(() => RNSiriShortcuts.getInitialShort
 export const addShortcutListener = (callback: (shortcut: ShortcutInfo) => void) => {
   return SiriShortcutsEvent.addListener("SiriShortcutListener", callback);
 }
+
+export {
+  default as AddToSiriButton,
+  SiriButtonStyles,
+} from "./AddToSiriButton";

@@ -30,11 +30,9 @@ import {
   getShortcuts,
   addShortcutListener,
   getInitialShortcut,
-} from 'react-native-siri-shortcut';
-import AddToSiriButton, {
+  AddToSiriButton,
   SiriButtonStyles,
-  supportsSiriButton,
-} from 'react-native-siri-shortcut/AddToSiriButton';
+} from 'react-native-siri-shortcut';
 
 const opts1: ShortcutOptions = {
   activityType: 'com.github.gustash.SiriShortcutsModuleExample.sayHello',
@@ -66,7 +64,7 @@ const opts2: ShortcutOptions = {
 type State = {
   shortcutInfo: ?any,
   shortcutActivityType: ?string,
-  addToSiriStyle: 0 | 1 | 2 | 3,
+  addToSiriStyle: 0 | 1 | 2 | 3 | 4 | 5,
   shortcuts: Array<ShortcutData>,
 };
 export default class App extends Component<void, State> {
@@ -229,23 +227,19 @@ export default class App extends Component<void, State> {
             title="Update list of shortcuts"
             onPress={this.updateShortcutList.bind(this)}
           />
-          {supportsSiriButton && (
-            <>
-              <AddToSiriButton
-                buttonStyle={addToSiriStyle}
-                onPress={() => {
-                  presentShortcut(opts1, ({status}) => {
-                    console.log(`I was ${status}`);
-                  });
-                }}
-                shortcut={opts1}
-              />
-              <Button
-                title="Swap Siri Button Theme"
-                onPress={this.swapSiriButtonTheme.bind(this)}
-              />
-            </>
-          )}
+          <AddToSiriButton
+            buttonStyle={addToSiriStyle}
+            onPress={() => {
+              presentShortcut(opts1, ({status}) => {
+                console.log(`I was ${status}`);
+              });
+            }}
+            shortcut={opts1}
+          />
+          <Button
+            title="Swap Siri Button Theme"
+            onPress={this.swapSiriButtonTheme.bind(this)}
+          />
           {shortcuts.length ? (
             shortcuts.map(({identifier, phrase, options}, i) => (
               <View key={identifier}>

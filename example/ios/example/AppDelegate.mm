@@ -110,7 +110,7 @@
 continueUserActivity:(NSUserActivity *)userActivity
  restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
-  return [RNSiriShortcuts application:application continueUserActivity:userActivity restorationHandler:restorationHandler];
+  return [RNSSSiriShortcuts application:application continueUserActivity:userActivity restorationHandler:restorationHandler];
 }
 
 @end

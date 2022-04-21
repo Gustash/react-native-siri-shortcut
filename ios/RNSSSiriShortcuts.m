@@ -1,12 +1,12 @@
 //
-//  RNSiriShortcuts.m
+//  RNSSSiriShortcuts.m
 //  RNSiriShortcuts
 //
 //  Created by Gustavo Parreira on 23/09/2018.
 //
 
-#import "RNSiriShortcuts.h"
-#import "NSUserActivity+ShortcutOptions.h"
+#import "RNSSSiriShortcuts.h"
+#import "RCTConvert+NSUserActivity.h"
 #import <React/RCTBridgeModule.h>
 #import <React/RCTConvert.h>
 #import <React/RCTEventEmitter.h>
@@ -35,10 +35,10 @@ NSString *MutationStatusToString(enum MutationStatus status) {
     }
 }
 
-@interface RNSiriShortcuts () <INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate>
+@interface RNSSSiriShortcuts () <INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate>
 @end
 
-@implementation RNSiriShortcuts {
+@implementation RNSSSiriShortcuts {
     RCTResponseSenderBlock _Nullable _presentShortcutCallback;
     NSObject * _Nullable _editingVoiceShortcut; // Keep support for iOS <9
     UIViewController * _Nullable _presenterViewController;
@@ -46,7 +46,7 @@ NSString *MutationStatusToString(enum MutationStatus status) {
 }
 @synthesize bridge;
 
-RCT_EXPORT_MODULE();
+RCT_EXPORT_MODULE(RNSiriShortcuts);
 
 - (INVoiceShortcut * _Nullable)editingVoiceShortcut
 API_AVAILABLE(ios(12.0))
@@ -93,19 +93,6 @@ continueUserActivity:(NSUserActivity *)userActivity
 }
 
 #pragma mark Contructors
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-        [notificationCenter addObserver:self
-                               selector:@selector(handleReceivedShortcutNotification:)
-                                   name:@"shortcutReceived"
-                                 object:nil];
-    }
-    return self;
-}
 
 #pragma mark Observers
 
@@ -205,7 +192,7 @@ RCT_EXPORT_METHOD(clearShortcutsWithIdentifiers:(NSArray *)persistentIdentifiers
 
 RCT_EXPORT_METHOD(donateShortcut:(NSDictionary *)options)
 {
-    NSUserActivity *activity = [[NSUserActivity alloc] initWithJSONOptions:options];
+    NSUserActivity *activity = [RCTConvert NSUserActivity:options];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIApplication sharedApplication]
@@ -222,7 +209,7 @@ RCT_EXPORT_METHOD(suggestShortcuts:(NSArray<NSDictionary *> *)shortcutOptionsArr
         NSMutableArray<INShortcut *> *suggestions = [NSMutableArray new];
         
         for (NSDictionary *options in shortcutOptionsArr) {
-            NSUserActivity *activity = [[NSUserActivity alloc] initWithJSONOptions:options];
+            NSUserActivity *activity = [RCTConvert NSUserActivity:options];
             [suggestions addObject:[[INShortcut alloc] initWithUserActivity:activity]];
         }
         
@@ -234,7 +221,7 @@ RCT_EXPORT_METHOD(presentShortcut:(NSDictionary *)options
                   callback:(RCTResponseSenderBlock)callback)
 {
     if (@available(iOS 12.0, *)) {
-        NSUserActivity *activity = [[NSUserActivity alloc] initWithJSONOptions:options];
+        NSUserActivity *activity = [RCTConvert NSUserActivity:options];
     
         INShortcut *shortcut = [[INShortcut alloc] initWithUserActivity:activity];
         

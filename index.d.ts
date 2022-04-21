@@ -1,4 +1,5 @@
-import { EmitterSubscription, NativeEventEmitter } from "react-native";
+import React from "react";
+import { EmitterSubscription, NativeEventEmitter, StyleProp, ViewStyle } from "react-native";
 
 export type ShortcutOptions = {
   activityType: string;
@@ -59,3 +60,21 @@ export function clearShortcutsWithIdentifiers(
 ): Promise<void>;
 
 export const supportsPresentShortcut: boolean;
+
+export enum SiriButtonStyles {
+  white = 0,
+  whiteOutline = 1,
+  black = 2,
+  blackOutline = 3,
+  /** Only supported on iOS >= 13. On iOS 12 this defaults to `white` */
+  automatic = 4,
+  /** Only supported on iOS >= 13. On iOS 12 this defaults to `whiteOutline` */
+  automaticOutline = 5,
+}
+export interface AddToSiriButtonProps {
+  buttonStyle?: SiriButtonStyles;
+  style?: StyleProp<ViewStyle>;
+  shortcut: ShortcutOptions;
+  onPress?: () => void;
+}
+export const AddToSiriButton: (props: AddToSiriButtonProps) => JSX.Element | null;
