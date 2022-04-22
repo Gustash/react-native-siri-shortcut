@@ -1,13 +1,13 @@
 //
 //  RNSiriShortcuts.h
-//  RNSiriShortcuts
+//  Pods
 //
-//  Created by Gustavo Parreira on 27/03/2020.
-//  Copyright © 2020 Facebook. All rights reserved.
+//  Created by Gustavo Parreira on 21/04/2022.
 //
 
 #ifndef RNSiriShortcuts_h
 #define RNSiriShortcuts_h
 
+#import "RNSSSiriShortcuts.h"
 
 #endif /* RNSiriShortcuts_h */
