@@ -12,9 +12,6 @@
 
 API_AVAILABLE(ios(12.0))
 @interface RNSSAddToSiriButtonViewManager : RCTViewManager
-
-@property (nonatomic, copy) RCTBubblingEventBlock onPress;
-
 @end
 
 @implementation RNSSAddToSiriButtonViewManager
