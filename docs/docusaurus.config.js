@@ -15,6 +15,7 @@ const config = {
   favicon: "img/favicon.ico",
   organizationName: "gustash", // Usually your GitHub org/user name.
   projectName: "react-native-siri-shortcut", // Usually your repo name.
+  trailingSlash: false,
   presets: [
     [
       "classic",
