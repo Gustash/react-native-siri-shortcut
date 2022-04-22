@@ -1,0 +1,29 @@
+import ShortcutOptions from "./types/_shortcut-options.mdx";
+
+# Donating Shortcuts
+
+Donate shortcut for an activity each time the user does it. For example, each time the user orders soup you may want to donate an activity that is relevant to ordering soup. Siri will use this information to then potentially recommend this activity to the user in their spotlight etc.
+
+:::note
+These recommendations are based on factors such as time and location.
+:::
+
+:::warning
+Do not donate an activity if the user hasn't done it.
+:::
+
+## API Definition
+
+### `donateShortcut`
+
+Donate a shortcut for an activity that the user just did.
+
+```typescript
+donateShortcut(options: ShortcutOptions): void;
+```
+
+## Type Reference
+
+### `ShortcutOptions`
+
+<ShortcutOptions />

@@ -1,0 +1,70 @@
+---
+sidebar_position: 0
+---
+
+import ShortcutInfo from "./types/_shortcut-info.mdx";
+
+# Listening for Shortcuts
+
+Whenever the user triggers a shortcut while your app was in the background, the listener will get called, allowing you to handle the shortcut request.
+
+```tsx
+import * as React from "react";
+import { addShortcutListener } from "react-native-siri-shortcut";
+
+const App = () => {
+  React.useEffect(() => {
+    const subscription = addShortcutListener(({ userInfo, activityType }) => {
+      console.log(
+        `User requested ${activityType} be handled, with ${userInfo} context`
+      );
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  return null;
+};
+```
+
+## API Definition
+
+### `addShortcutListener`
+
+Adds an event listener for triggered shortcuts.
+
+Returns an object with `remove()` to remove this listener.
+
+```typescript
+const subscription = addShortcutListener(callback: ShortcutListener);
+
+subscription.remove();
+```
+
+### `getInitialShortcut`
+
+Get the shortcut that launched the app, if any.
+
+Returns `Promise<ShortcutInfo | null>`
+
+```typescript
+const initialShortcut = await getInitialShortcut();
+
+if (initialShortcut) {
+  // Handle the shortcut that launched the app
+}
+```
+
+## Type Reference
+
+### `ShortcutListener`
+
+```typescript
+type ShortcutListener = (shortcut: ShortcutInfo) => void;
+```
+
+### `ShortcutInfo`
+
+<ShortcutInfo />

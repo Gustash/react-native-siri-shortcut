@@ -1,0 +1,25 @@
+import ShortcutOptions from "./types/_shortcut-options.mdx";
+
+# Suggesting Shortcuts
+
+Suggest shortcut for an activity if you would like an activity to appear in Siri Shortcuts without the user having to do it and thus before you'd donate it.
+
+:::note
+This is geared towards more general actions that you believe users may want to use in Shortcuts even if they haven't made use of it in your app.
+:::
+
+## API Definition
+
+### `suggestShortcuts`
+
+Suggest multiple shortcuts that the user may want to use.
+
+```typescript
+suggestShortcuts(options: ShortcutOptions[]): void;
+```
+
+## Type Reference
+
+### `ShortcutOptions`
+
+<ShortcutOptions />

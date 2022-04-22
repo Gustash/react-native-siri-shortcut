@@ -1,0 +1,29 @@
+import CanThrowWarning from "./warnings/_function-can-throw.mdx";
+import ShortcutData from "./types/_shortcut-data.mdx";
+import ShortcutOptions from "./types/_shortcut-options.mdx";
+
+# List Recorded Shortcuts
+
+Get a list of the voice shortcuts the user has added to their Shortcuts App.
+
+## API Definition
+
+### `getShortcuts`
+
+Returns `Promise<ShortcutData[]>`
+
+<CanThrowWarning version={12} />
+
+```typescript
+const recorded = await getShortcuts();
+```
+
+## Type Reference
+
+### `ShortcutData`
+
+<ShortcutData />
+
+### `ShortcutOptions`
+
+<ShortcutOptions />
