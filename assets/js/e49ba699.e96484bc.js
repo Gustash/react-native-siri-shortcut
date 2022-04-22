@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkreact_native_siri_shortcut_docs=self.webpackChunkreact_native_siri_shortcut_docs||[]).push([[744],{3769:function(s){s.exports=JSON.parse('{"plugin":{"name":"docusaurus-plugin-content-docs","id":"default"}}')}}]);
