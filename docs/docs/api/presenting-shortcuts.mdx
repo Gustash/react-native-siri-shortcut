@@ -1,0 +1,47 @@
+import ShortcutOptions from "./types/_shortcut-options.mdx";
+
+# Presenting Shortcuts
+
+Present a shortcut to the user so they can add/edit/remove from their Shortcuts App.
+
+<details>
+  <summary>Presentation Example</summary>
+
+  ![Present Shortcut Example](/img/present-shortcut-example.png)
+</details>
+
+```typescript
+import { presentShortcut } from "react-native-siri-shortcuts";
+
+presentShortcut(orderTaxiShortcut, ({ status, phrase }) => {
+  console.log(`${status} order taxi shortcut with phrase: ${phrase}`);
+});
+```
+
+## API Definition
+
+### `presentShortcut`
+
+Takes a shortcut and a callback function which will be called when the user dismisses the modal.
+
+```typescript
+presentShortcut(
+  shortcut: ShortcutOptions,
+  callback: (data: PresentShortcutCallbackData) => void,
+);
+```
+
+## Type Reference
+
+### `ShortcutOptions`
+
+<ShortcutOptions />
+
+### `PresentShortcutCallbackData`
+
+```typescript
+type PresentShortcutCallbackData = {
+  status: "cancelled" | "added" | "deleted" | "updated";
+  phrase: string | undefined;
+};
+```

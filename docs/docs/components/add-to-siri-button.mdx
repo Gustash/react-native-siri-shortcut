@@ -1,0 +1,101 @@
+import ShortcutOptions from "../api/types/_shortcut-options.mdx";
+
+# AddToSiriButton
+
+A Button that allows the user to easily add/edit/remove a voice shortcut by pressing it.
+
+```tsx
+import {
+  AddToSiriButton,
+  SiriButtonStyles,
+  presentShortcut,
+} from "react-native-siri-shortcut";
+
+const OrderSoupSiriButton = () => {
+  return (
+    <AddToSiriButton
+      shortcut={orderSoupShortcut}
+      buttonStyle={SiriButtonStyles.automaticOutline}
+      onPress={() => {
+        presentShortcut(orderSoupShortcut, ({status}) => {
+          console.log(`${status} order soup shortcut`);
+        });
+      }}
+    />
+  );
+};
+```
+
+:::note
+This component is only supported from iOS 12 onwards. On Android and iOS versions older than 12, it will not render.
+:::
+
+## Props
+
+### `buttonStyle`
+
+One of 6 possible styles to apply to the button. Can be one of:
+
+- `SiriButtonStyles.white`
+
+![White Style](/img/add-to-siri-white.png)
+
+- `SiriButtonStyles.whiteOutline`
+
+![White Style](/img/add-to-siri-white-outline.png)
+
+- `SiriButtonStyles.black`
+
+![White Style](/img/add-to-siri-black.png)
+
+- `SiriButtonStyles.blackOutline`
+
+![White Style](/img/add-to-siri-black-outline.png)
+
+**iOS 13+ only**
+
+- `SiriButtonStyles.automatic`
+- `SiriButtonStyles.automaticOutline`
+
+Defaults to `automatic`.
+
+:::note
+The `automatic` and `automaticOutline` styles are only supported from iOS 13 onwards. On iOS 12, they default to `white` and `whiteOutline`, respectfully.
+:::
+
+### `style`
+
+You can use any style you would use for a `View`.
+
+### `shortcut`
+
+**Required.** The shortcut to attach to this button.
+
+Type of `ShortcutOptions`.
+
+### `onPress`
+
+Called whenever the user presses the button. You usually call [`presentShortcut`](../api/presenting-shortcuts) here.
+
+Type of `() => void`.
+
+## Type Reference
+
+### `SiriButtonStyles`
+
+```typescript
+enum SiriButtonStyles {
+  white = 0,
+  whiteOutline = 1,
+  black = 2,
+  blackOutline = 3,
+  /** Only supported on iOS >= 13. On iOS 12 this defaults to `white` */
+  automatic = 4,
+  /** Only supported on iOS >= 13. On iOS 12 this defaults to `whiteOutline` */
+  automaticOutline = 5,
+}
+```
+
+### `ShortcutOptions`
+
+<ShortcutOptions />

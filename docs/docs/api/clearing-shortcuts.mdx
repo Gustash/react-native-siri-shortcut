@@ -1,0 +1,37 @@
+import CanThrowWarning from "./warnings/_function-can-throw.mdx";
+
+# Clearing Shortcuts
+
+You can clear shortcuts that are no longer relevant to the user or the current application state.
+
+This will remove them from Spotlight and Siri Suggestions, and will remove them from the Shortcuts App.
+
+:::note
+iOS does not allow your app to remove voice shortcuts that the user has already created. It's your choice on how to handle this, whether by ignoring the shortcut, or letting the user know it is no longer valid.
+:::
+
+## API Definition
+
+### `clearAllShortcuts`
+
+Clears all the previously donated/suggested shortcuts.
+
+Returns `Promise<void>`
+
+<CanThrowWarning version={12} />
+
+```typescript
+clearAllShortcuts();
+```
+
+### `clearShortcutsWithIdentifiers`
+
+Clears donated/suggested shortcuts which `persistentIndentifier` match one of the provided `identifiers`.
+
+Returns `Promise<void>`
+
+<CanThrowWarning version={12} />
+
+```typescript
+clearShortcutsWithIdentifiers(identifiers: string[]);
+```
