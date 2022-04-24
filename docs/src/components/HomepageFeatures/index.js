@@ -28,10 +28,9 @@ const FeatureList = [
     Svg: require("@site/static/img/icons8-open-source.svg").default,
     description: (
       <>
-        Licensed under the GNU Lesser General Public License v3.0,{" "}
+        Licensed under the MIT License,{" "}
         <code>react-native-siri-shortcut</code>{" "}
-        gives you the freedom to use it in proprietary projects, while ensuring
-        that useful modifications to the library are Open-Sourced.
+        gives you full transparency and control over it's code.
       </>
     ),
   },

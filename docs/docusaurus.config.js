@@ -116,7 +116,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Gustavo Parreira. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
