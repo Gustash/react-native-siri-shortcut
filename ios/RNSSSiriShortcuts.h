@@ -28,6 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
             (nonnull void (^)(NSArray *_Nullable))restorationHandler;
         #endif
 
++ (BOOL)scene:(nonnull UIScene *)scene
+continueUserActivity:(nonnull NSUserActivity *)userActivity API_AVAILABLE(ios(13.0));
+
 @end
 
 NS_ASSUME_NONNULL_END

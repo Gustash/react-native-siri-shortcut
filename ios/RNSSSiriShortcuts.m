@@ -85,6 +85,18 @@ continueUserActivity:(NSUserActivity *)userActivity
     return YES;
 }
 
++ (BOOL)scene:(UIScene *)scene
+continueUserActivity:(NSUserActivity *)userActivity   API_AVAILABLE(ios(13.0)){
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter postNotificationName:@"shortcutReceived"
+                                      object:nil
+                                    userInfo:@{
+        @"userInfo": RCTNullIfNil(userActivity.userInfo),
+        @"activityType": userActivity.activityType,
+    }];
+    return YES;
+}
+
 #pragma mark RCTBridgeModule
 
 + (BOOL)requiresMainQueueSetup
