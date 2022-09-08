@@ -67,6 +67,17 @@ API_AVAILABLE(ios(12.0))
 
 #pragma mark Class Properties
 
++ (void)postShortcutReceivedNotificationWithUserActivity:(NSUserActivity *)userActivity
+{
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter postNotificationName:@"shortcutReceived"
+                                      object:nil
+                                    userInfo:@{
+        @"userInfo": RCTNullIfNil(userActivity.userInfo),
+        @"activityType": userActivity.activityType,
+    }];
+}
+
 + (BOOL)application:(UIApplication *)application
 continueUserActivity:(NSUserActivity *)userActivity
  restorationHandler:
@@ -75,13 +86,15 @@ continueUserActivity:(NSUserActivity *)userActivity
 #else
 (nonnull void (^)(NSArray *_Nullable))restorationHandler {
 #endif
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-    [notificationCenter postNotificationName:@"shortcutReceived"
-                                      object:nil
-                                    userInfo:@{
-        @"userInfo": RCTNullIfNil(userActivity.userInfo),
-        @"activityType": userActivity.activityType,
-    }];
+    [RNSSSiriShortcuts postShortcutReceivedNotificationWithUserActivity:userActivity];
+    return YES;
+}
+
++ (BOOL)scene:(UIScene *)scene
+continueUserActivity:(NSUserActivity *)userActivity
+API_AVAILABLE(ios(13.0))
+{
+    [RNSSSiriShortcuts postShortcutReceivedNotificationWithUserActivity:userActivity];
     return YES;
 }
 
