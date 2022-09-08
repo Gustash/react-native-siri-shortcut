@@ -86,7 +86,9 @@ continueUserActivity:(NSUserActivity *)userActivity
 }
 
 + (BOOL)scene:(UIScene *)scene
-continueUserActivity:(NSUserActivity *)userActivity   API_AVAILABLE(ios(13.0)){
+continueUserActivity:(NSUserActivity *)userActivity
+API_AVAILABLE(ios(13.0))
+{
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [notificationCenter postNotificationName:@"shortcutReceived"
                                       object:nil
