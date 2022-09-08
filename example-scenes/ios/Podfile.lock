@@ -347,7 +347,7 @@ PODS:
     - React-jsi (= 0.68.1)
     - React-logger (= 0.68.1)
     - React-perflogger (= 0.68.1)
-  - RNSiriShortcuts (2.1.0):
+  - RNSiriShortcuts (3.1.1):
     - React
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
@@ -540,11 +540,11 @@ SPEC CHECKSUMS:
   React-RCTVibration: 9e344c840176b0af9c84d5019eb4fed8b3c105a1
   React-runtimeexecutor: 7285b499d0339104b2813a1f58ad1ada4adbd6c0
   ReactCommon: bf2888a826ceedf54b99ad1b6182d1bc4a8a3984
-  RNSiriShortcuts: 25b8d989565561f96a6a8791b474226f916fef72
+  RNSiriShortcuts: a9299cf3c6c01e659dec6bc45161b9080c4afaa7
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 17cd9a50243093b547c1e539c749928dd68152da
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 8c8a13ce08d644ffa6042bce5860ab19428fe515
+PODFILE CHECKSUM: 1a83f90b6a23ed392e74d7369faa81043a0ef798
 
 COCOAPODS: 1.11.3
