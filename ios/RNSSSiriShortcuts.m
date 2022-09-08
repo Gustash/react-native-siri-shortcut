@@ -67,27 +67,7 @@ API_AVAILABLE(ios(12.0))
 
 #pragma mark Class Properties
 
-+ (BOOL)application:(UIApplication *)application
-continueUserActivity:(NSUserActivity *)userActivity
- restorationHandler:
-#if defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= 12000) /* __IPHONE_12_0 */
-(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> *_Nullable))restorationHandler {
-#else
-(nonnull void (^)(NSArray *_Nullable))restorationHandler {
-#endif
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-    [notificationCenter postNotificationName:@"shortcutReceived"
-                                      object:nil
-                                    userInfo:@{
-        @"userInfo": RCTNullIfNil(userActivity.userInfo),
-        @"activityType": userActivity.activityType,
-    }];
-    return YES;
-}
-
-+ (BOOL)scene:(UIScene *)scene
-continueUserActivity:(NSUserActivity *)userActivity
-API_AVAILABLE(ios(13.0))
++ (void)postShortcutReceivedNotificationWithUserActivity:(NSUserActivity *)userActivity
 {
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [notificationCenter postNotificationName:@"shortcutReceived"
@@ -96,6 +76,25 @@ API_AVAILABLE(ios(13.0))
         @"userInfo": RCTNullIfNil(userActivity.userInfo),
         @"activityType": userActivity.activityType,
     }];
+}
+
++ (BOOL)application:(UIApplication *)application
+continueUserActivity:(NSUserActivity *)userActivity
+ restorationHandler:
+#if defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= 12000) /* __IPHONE_12_0 */
+(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> *_Nullable))restorationHandler {
+#else
+(nonnull void (^)(NSArray *_Nullable))restorationHandler {
+#endif
+    [RNSSSiriShortcuts postShortcutReceivedNotificationWithUserActivity:userActivity];
+    return YES;
+}
+
++ (BOOL)scene:(UIScene *)scene
+continueUserActivity:(NSUserActivity *)userActivity
+API_AVAILABLE(ios(13.0))
+{
+    [RNSSSiriShortcuts postShortcutReceivedNotificationWithUserActivity:userActivity];
     return YES;
 }
 
