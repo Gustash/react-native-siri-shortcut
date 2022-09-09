@@ -44,7 +44,6 @@ NSString *MutationStatusToString(enum MutationStatus status) {
     UIViewController * _Nullable _presenterViewController;
     BOOL _hasListeners;
 }
-@synthesize bridge;
 
 RCT_EXPORT_MODULE(RNSiriShortcuts);
 
@@ -153,7 +152,7 @@ RCT_EXPORT_METHOD(getInitialShortcut:(RCTPromiseResolveBlock)resolve
                   rejecter:(__unused RCTPromiseRejectBlock)reject)
 {
     // Extract the NSUserActivity data from launchOptions
-    NSDictionary *userActivityDictionary = bridge.launchOptions[UIApplicationLaunchOptionsUserActivityDictionaryKey];
+    NSDictionary *userActivityDictionary = self.bridge.launchOptions[UIApplicationLaunchOptionsUserActivityDictionaryKey];
     NSDictionary * _Nullable shortcutInfo = nil;
     
     // If there was no NSUserActivity in launchOptions, the app was not launched from a shortcut
