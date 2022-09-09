@@ -205,7 +205,7 @@ RCT_EXPORT_METHOD(clearShortcutsWithIdentifiers:(NSArray *)persistentIdentifiers
 
 RCT_EXPORT_METHOD(donateShortcut:(NSDictionary *)options)
 {
-    NSUserActivity *activity = [RCTConvert NSUserActivity:options];
+    __block NSUserActivity *activity = [RCTConvert NSUserActivity:options];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIApplication sharedApplication]
@@ -236,7 +236,7 @@ RCT_EXPORT_METHOD(presentShortcut:(NSDictionary *)options
     if (@available(iOS 12.0, *)) {
         NSUserActivity *activity = [RCTConvert NSUserActivity:options];
     
-        INShortcut *shortcut = [[INShortcut alloc] initWithUserActivity:activity];
+        __block INShortcut *shortcut = [[INShortcut alloc] initWithUserActivity:activity];
         
         [self fetchRecordedVoiceShortcutsWithCompletion:^(NSArray<INVoiceShortcut *> * _Nullable voiceShortcuts,
                                                           NSError * _Nullable error) {
@@ -262,7 +262,7 @@ RCT_EXPORT_METHOD(presentShortcut:(NSDictionary *)options
             }
             
             self->_presentShortcutCallback = callback;
-            INVoiceShortcut *addedVoiceShortcut;
+            __block INVoiceShortcut *addedVoiceShortcut;
             for (INVoiceShortcut *voiceShortcut in voiceShortcuts) {
                 NSUserActivity * _Nullable userActivity = voiceShortcut.shortcut.userActivity;
                 if (userActivity != nil &&
