@@ -10,21 +10,11 @@ class PhoneSceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // Only initiate the bridge once
     if (appDelegate.bridge == nil) {
-      // Build equivalent of launchOptions to pass to RCTBridge as we would have in didFinishLaunchingWithOptions
-      // In this example we only add userActivity
-      var launchOptions: [UIApplication.LaunchOptionsKey: Any] = [:];
-
-      if !connectionOptions.userActivities.isEmpty {
-        let userActivity = connectionOptions.userActivities.first;
-        let userActivityDictionary = [
-          "UIApplicationLaunchOptionsUserActivityTypeKey": userActivity?.activityType as Any,
-          "UIApplicationLaunchOptionsUserActivityKey": userActivity!
-        ] as [String : Any];
-        launchOptions[UIApplication.LaunchOptionsKey.userActivityDictionary] = userActivityDictionary;
-      }
-
-      appDelegate.bridge = RCTBridge.init(delegate: appDelegate, launchOptions: launchOptions)
-      appDelegate.rootView = RCTRootView.init(bridge: appDelegate.bridge!, moduleName: "example", initialProperties: nil)
+      let bridge = RCTBridge(delegate: appDelegate, connectionOptions: connectionOptions)
+      let rootView = RCTRootView(bridge: bridge, moduleName: "example", initialProperties: nil)
+      
+      appDelegate.bridge = bridge
+      appDelegate.rootView = rootView
     }
 
     let rootViewController = UIViewController()
