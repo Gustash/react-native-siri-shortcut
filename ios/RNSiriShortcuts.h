@@ -9,5 +9,6 @@
 #define RNSiriShortcuts_h
 
 #import "RNSSSiriShortcuts.h"
+#import "RCTBridge+UIScene.h"
 
 #endif /* RNSiriShortcuts_h */
