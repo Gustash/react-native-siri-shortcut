@@ -12,6 +12,14 @@
 - (instancetype)initWithDelegate:(id<RCTBridgeDelegate>)delegate
                connectionOptions:(UISceneConnectionOptions *)connectionOptions
 {
+    if (connectionOptions.notificationResponse) {
+        NSDictionary<UIApplicationLaunchOptionsKey, id> *launchOptions = @{
+             UIApplicationLaunchOptionsRemoteNotificationKey: connectionOptions.notificationResponse.notification.request.content.userInfo,
+        };
+
+        return [self initWithDelegate:delegate launchOptions:launchOptions];
+    }
+
     if (connectionOptions.userActivities.count < 1) {
         return [self initWithDelegate:delegate launchOptions:@{}];
     }
