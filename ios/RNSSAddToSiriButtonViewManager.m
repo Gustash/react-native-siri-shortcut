@@ -42,7 +42,7 @@ RCT_CUSTOM_VIEW_PROPERTY(buttonStyle, INUIAddVoiceShortcutButtonStyle, RNSSAddTo
 
 - (NSDictionary *)constantsToExport
 {
-    INUIAddVoiceShortcutButton *button = [INUIAddVoiceShortcutButton new];
+    INUIAddVoiceShortcutButton *button = [INUIAddVoiceShortcutButton alloc];
     button.translatesAutoresizingMaskIntoConstraints = NO;
     [button layoutIfNeeded];
     
