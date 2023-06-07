@@ -42,10 +42,10 @@ RCT_CUSTOM_VIEW_PROPERTY(buttonStyle, INUIAddVoiceShortcutButtonStyle, RNSSAddTo
 
 - (NSDictionary *)constantsToExport
 {
-    INUIAddVoiceShortcutButton *button = [INUIAddVoiceShortcutButton new];
+    INUIAddVoiceShortcutButton *button = [[INUIAddVoiceShortcutButton alloc] initWithStyle:INUIAddVoiceShortcutButtonStyleAutomatic];
     button.translatesAutoresizingMaskIntoConstraints = NO;
     [button layoutIfNeeded];
-    
+
     NSMutableDictionary *availableStyles = [[NSMutableDictionary alloc] initWithDictionary:@{
         @"white": @(INUIAddVoiceShortcutButtonStyleWhite),
         @"whiteOutline": @(INUIAddVoiceShortcutButtonStyleWhiteOutline),
@@ -56,7 +56,7 @@ RCT_CUSTOM_VIEW_PROPERTY(buttonStyle, INUIAddVoiceShortcutButtonStyle, RNSSAddTo
         availableStyles[@"automatic"] = @(INUIAddVoiceShortcutButtonStyleAutomatic);
         availableStyles[@"automaticOutline"] = @(INUIAddVoiceShortcutButtonStyleAutomaticOutline);
     }
-    
+
     return @{
         @"ComponentWidth": @(button.intrinsicContentSize.width),
         @"ComponentHeight": @(button.intrinsicContentSize.height),
