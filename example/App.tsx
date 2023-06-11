@@ -1,16 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-import type {
-  ShortcutOptions,
-  ShortcutData,
-  ShortcutInfo,
-} from 'react-native-siri-shortcut';
-
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -20,6 +7,7 @@ import {
   SafeAreaView,
   View,
   EmitterSubscription,
+  Alert,
 } from 'react-native';
 import {
   donateShortcut,
@@ -32,6 +20,9 @@ import {
   getInitialShortcut,
   AddToSiriButton,
   SiriButtonStyles,
+  type ShortcutOptions,
+  type ShortcutData,
+  type ShortcutInfo,
 } from 'react-native-siri-shortcut';
 
 const opts1: ShortcutOptions = {
@@ -62,13 +53,13 @@ const opts2: ShortcutOptions = {
   description: 'Just a random description',
 };
 type State = {
-  shortcutInfo: ?any,
-  shortcutActivityType: ?string,
+  shortcutInfo: any,
+  shortcutActivityType: string | null,
   addToSiriStyle: 0 | 1 | 2 | 3 | 4 | 5,
   shortcuts: Array<ShortcutData>,
 };
 export default class App extends Component<void, State> {
-  listener: ?EmitterSubscription = null;
+  listener: EmitterSubscription | null = null;
 
   state: State = {
     shortcutInfo: null,
@@ -126,18 +117,18 @@ export default class App extends Component<void, State> {
       await clearShortcutsWithIdentifiers([
         'com.github.gustash.SiriShortcutsModuleExample.sayHello',
       ]);
-      alert('Cleared Shortcut 1');
+      Alert.alert('Cleared Shortcut 1');
     } catch (e) {
-      alert("You're not running iOS 12!");
+      Alert.alert("You're not running iOS 12!");
     }
   }
 
   async clearShortcut2() {
     try {
       await clearShortcutsWithIdentifiers(['some.persistent.identifier']);
-      alert('Cleared Shortcut 2');
+      Alert.alert('Cleared Shortcut 2');
     } catch (e) {
-      alert("You're not running iOS 12!");
+      Alert.alert("You're not running iOS 12!");
     }
   }
 
@@ -149,7 +140,7 @@ export default class App extends Component<void, State> {
         shortcuts,
       });
     } catch (e) {
-      alert("You're not running iOS 12!");
+      Alert.alert("You're not running iOS 12!");
     }
   }
 
@@ -159,27 +150,25 @@ export default class App extends Component<void, State> {
         'com.github.gustash.SiriShortcutsModuleExample.sayHello',
         'some.persistent.identifier',
       ]);
-      alert('Cleared Both Shortcuts');
+      Alert.alert('Cleared Both Shortcuts');
     } catch (e) {
-      alert("You're not running iOS 12!");
+      Alert.alert("You're not running iOS 12!");
     }
   }
 
   async clearShortcuts() {
     try {
       await clearAllShortcuts();
-      alert('Deleted all the shortcuts');
+      Alert.alert('Deleted all the shortcuts');
     } catch (e) {
-      alert("You're not running iOS 12!");
+      Alert.alert("You're not running iOS 12!");
     }
   }
 
   swapSiriButtonTheme() {
     const {addToSiriStyle} = this.state;
 
-    const styles = Object.keys(SiriButtonStyles).map(
-      key => SiriButtonStyles[key],
-    );
+    const styles = Object.values(SiriButtonStyles) as SiriButtonStyles[];
     const index = styles.findIndex(style => style === addToSiriStyle);
     if (index === styles.length - 1) this.setState({addToSiriStyle: styles[0]});
     else this.setState({addToSiriStyle: styles[index + 1]});
