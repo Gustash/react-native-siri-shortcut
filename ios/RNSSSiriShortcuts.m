@@ -327,7 +327,7 @@ RCT_EXPORT_METHOD(getShortcuts:(RCTPromiseResolveBlock)resolve
                         @"userInfo": RCTNullIfNil(userActivity.userInfo),
                         @"needsSave": @(userActivity.needsSave),
                         @"keywords": RCTNullIfNil(userActivity.keywords),
-                        @"persistentIndentifier": RCTNullIfNil(userActivity.persistentIdentifier),
+                        @"persistentIdentifier": RCTNullIfNil(userActivity.persistentIdentifier),
                         @"isEligibleForHandoff": @(userActivity.isEligibleForHandoff),
                         @"isEligibleForSearch": @(userActivity.isEligibleForSearch),
                         @"isEligibleForPublicIndexing": @(userActivity.isEligibleForPublicIndexing),
